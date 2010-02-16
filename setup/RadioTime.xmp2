@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>2.0</Version>
+  <Groups>
+    <Items>
+      <GroupItem Name="Default">
+        <ParentGroup />
+        <DisplayName>Default</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Default</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9d15977c-1bbd-41fd-b841-3e0d7ad182de}-RadioTimeOpmlApi.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.pdb</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{98c922a4-e916-4e1e-a5d2-2c4531adea4a}-RadioTimeOpmlApi.pdb</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{392c1e4d-a4e4-4ba1-a81d-97dcf761d2fa}-RadioTimePlugin.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.pdb</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{965e276f-0eea-4b15-a560-6a45cf547b8c}-RadioTimePlugin.pdb</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.pdb</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Skin">
+        <DisplayName>Skin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Skin</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\RadioTime.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0439a4e1-14f6-4ed8-9179-2c283a1661a7}-RadioTime.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Blue3wide\RadioTime.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\Media\hover_radiotime.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fdf97d79-39a3-4720-8516-04410c7d2809}-hover_radiotime.png</ZipFileName>
+              <DestinationFilename>%Skin%\Blue3wide\Media\hover_radiotime.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f24073dd-0a4a-4a3c-b714-359c48a2432d}-radiotime_logo.png</ZipFileName>
+              <DestinationFilename>%Skin%\Blue3wide\Media\radiotime_logo.png</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="DefaultSkin">
+        <DisplayName>DefaultSkin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>DefaultSkin</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="GenericSkinFile" SystemFile="false" Modified="false">
+              <Param1>Blue3wide</Param1>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\RadioTime.xml</LocalFileName>
+              <ZipFileName>Installer{GenericSkinFile}\{9e377a1a-7e08-4d36-a0f9-d0ad2e962dbc}-RadioTime.xml</ZipFileName>
+              <DestinationFilename>%Skin%\[DEFAULT]\RadioTime.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="GenericSkinFile" SystemFile="false" Modified="false">
+              <Param1>Blue3wide</Param1>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\Media\hover_radiotime.png</LocalFileName>
+              <ZipFileName>Installer{GenericSkinFile}\{2d4c934e-8a35-40de-9f55-e372e003be6f}-hover_radiotime.png</ZipFileName>
+              <DestinationFilename>%Skin%\[DEFAULT]\Media\hover_radiotime.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="GenericSkinFile" SystemFile="false" Modified="false">
+              <Param1>Blue3wide</Param1>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
+              <ZipFileName>Installer{GenericSkinFile}\{70b94f79-d7d1-4706-b6e9-cca6ac20650c}-radiotime_logo.png</ZipFileName>
+              <DestinationFilename>%Skin%\[DEFAULT]\Media\radiotime_logo.png</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+    </Items>
+  </Groups>
+  <Sections>
+    <Items>
+      <SectionItem Guid="7e67edf7-f9e2-4c09-a309-08940824fad7" Name="Welcome Screen" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>Welcome to the Extension Installer for [Name]</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Description">
+              <Value>This will install [Name] version [Version] on your computer.
+It is recommended that you close all other applications before continuing.
+Click Next to continue or Cancel to exit Setup.</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Welcome Screen</PanelName>
+        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="ba601efb-cd0b-44a1-9b93-60534e51301e" Name="Install Section" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header Title">
+              <Value />
+              <ValueType>String</ValueType>
+              <Description>Header title</Description>
+            </SectionParam>
+            <SectionParam Name="Header description">
+              <Value />
+              <ValueType>String</ValueType>
+              <Description>Description of section, shown in under section title</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items>
+            <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
+              <Params>
+                <Items />
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+          </Items>
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Install Section</PanelName>
+        <WizardButtonsEnum>Next</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="f70f10c5-2a52-4890-b09d-ffbf8c2ab594" Name="Setup Complete" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>The Extension Installer Wizard has successfully installed [Name].</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Setup Complete</PanelName>
+        <WizardButtonsEnum>Finish</WizardButtonsEnum>
+      </SectionItem>
+    </Items>
+  </Sections>
+  <Dependencies>
+    <Items />
+  </Dependencies>
+  <GeneralInfo>
+    <Name>RadiTime</Name>
+    <Id>71cc3381-de92-482d-9556-7e86f67f8067</Id>
+    <Author>Dukus</Author>
+    <HomePage>http://code.google.com/p/radiotime-plugin-for-mediaportal/</HomePage>
+    <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/radiotime-plugin-40575/</ForumPage>
+    <UpdateUrl />
+    <Version>
+      <Major>0</Major>
+      <Minor>5</Minor>
+      <Build>3</Build>
+      <Revision>0</Revision>
+    </Version>
+    <ExtensionDescription>Plugin for browse online radio stations</ExtensionDescription>
+    <VersionDescription>Improved playback </VersionDescription>
+    <DevelopmentStatus>Beta</DevelopmentStatus>
+    <OnlineLocation />
+    <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
+    <Tags>radio, online</Tags>
+    <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
+    <Params>
+      <Items>
+        <SectionParam Name="Icon">
+          <Value />
+          <ValueType>File</ValueType>
+          <Description>The icon file of the package (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Online Icon">
+          <Value />
+          <ValueType>String</ValueType>
+          <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Configuration file">
+          <Value />
+          <ValueType>Template</ValueType>
+          <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+        </SectionParam>
+        <SectionParam Name="Online Screenshots">
+          <Value />
+          <ValueType>String</ValueType>
+          <Description>Online stored screenshot urls separated by ; </Description>
+        </SectionParam>
+      </Items>
+    </Params>
+  </GeneralInfo>
+  <UniqueFileList>
+    <Items>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9d15977c-1bbd-41fd-b841-3e0d7ad182de}-RadioTimeOpmlApi.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.pdb</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{98c922a4-e916-4e1e-a5d2-2c4531adea4a}-RadioTimeOpmlApi.pdb</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{392c1e4d-a4e4-4ba1-a81d-97dcf761d2fa}-RadioTimePlugin.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.pdb</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{965e276f-0eea-4b15-a560-6a45cf547b8c}-RadioTimePlugin.pdb</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.pdb</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>skin\Blue3wide\RadioTime.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0439a4e1-14f6-4ed8-9179-2c283a1661a7}-RadioTime.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide\RadioTime.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>skin\Blue3wide\Media\hover_radiotime.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fdf97d79-39a3-4720-8516-04410c7d2809}-hover_radiotime.png</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide\Media\hover_radiotime.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f24073dd-0a4a-4a3c-b714-359c48a2432d}-radiotime_logo.png</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide\Media\radiotime_logo.png</DestinationFilename>
+      </FileItem>
+    </Items>
+  </UniqueFileList>
+  <ProjectSettings>
+    <FolderGroups>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{900b6205-3922-4cc7-bbbf-1e83dac233f8}-</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide</DestinationFilename>
+        <Folder>skin\Blue3wide</Folder>
+        <Group>Skin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="GenericSkinFile" SystemFile="false" Modified="true">
+        <Param1>Blue3wide</Param1>
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{GenericSkinFile}\{156405e1-f975-41c9-9277-052657f3e84b}-</ZipFileName>
+        <DestinationFilename>%Skin%\[DEFAULT]\</DestinationFilename>
+        <Folder>skin\Blue3wide</Folder>
+        <Group>DefaultSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+    </FolderGroups>
+    <ProjectFilename>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.xmp2</ProjectFilename>
+    <UpdatePath1>F:\devel\vs2005\RadioTimePlugin\setup\update.xml</UpdatePath1>
+    <UpdatePath2 />
+    <UpdatePath3 />
+  </ProjectSettings>
+</PackageClass>

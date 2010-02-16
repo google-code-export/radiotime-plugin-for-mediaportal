@@ -83,7 +83,7 @@ namespace RadioTimePlugin
     private RadioTimeWebService websrv = new RadioTimeWebService();
     private WebClient Client = new WebClient();
     private Queue downloaQueue = new Queue();
-    private System.Timers.Timer updateStationLogoTimer = new System.Timers.Timer(0.5* 1000);
+    private System.Timers.Timer updateStationLogoTimer = new System.Timers.Timer(0.2* 1000);
     private DownloadFileObject curentDownlodingFile;
     private Settings _setting = new Settings();
     private Identification iden = new Identification();
@@ -106,6 +106,9 @@ namespace RadioTimePlugin
     protected GUIButtonControl searchButton = null;
     [SkinControlAttribute(6)]
     protected GUIButtonControl presetsButton = null;
+    [SkinControlAttribute(7)]
+    protected GUIButtonControl searchArtistButton = null;
+
     [SkinControlAttribute(51)]
     protected GUIImage logoImage = null;
     #endregion
@@ -189,11 +192,11 @@ namespace RadioTimePlugin
     protected override void OnPageLoad()
     {
       updateStationLogoTimer.Enabled = true;
-      Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
       if (grabber.Body.Count < 1)
       {
         if (_setting.ShowPresets)
         {
+          Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
           grabber.GetData(_setting.PresetsUrl, false, false);
         }
         else
@@ -203,7 +206,7 @@ namespace RadioTimePlugin
       }
       UpdateList();
       GUIPropertyManager.SetProperty("#header.label", " ");
-      GUIPropertyManager.SetProperty("#nowplaying", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
       if (sortButton != null)
       {
         sortButton.SortChanged += new SortEventHandler(SortChanged);
@@ -213,11 +216,16 @@ namespace RadioTimePlugin
       switch (curSorting)
       {
         case StationSort.SortMethod.bitrate:
-          sortButton.Label = GUILocalizeStrings.Get(25655);
+          sortButton.Label = Translation.SortByBitrate;
           break;
         case StationSort.SortMethod.name:
-          sortButton.Label = GUILocalizeStrings.Get(25654);
+          sortButton.Label = Translation.SortByName;
           break;
+      }
+      
+      foreach (string name in Translation.Strings.Keys)
+      {
+        SetProperty("#RadioTime.Translation." + name + ".Label", Translation.Strings[name]);
       }
 
       base.OnPageLoad();
@@ -278,6 +286,11 @@ namespace RadioTimePlugin
         OnShowSortOptions();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
+      else if (control == searchArtistButton)
+      {
+        DoSearchArtist();
+        GUIControl.FocusControl(GetID, listControl.GetID);
+      }
       else if (control == searchButton)
       {
         DoSearch();
@@ -306,69 +319,49 @@ namespace RadioTimePlugin
       UpdateList();
     }
 
+    internal static void SetProperty(string property, string value)
+    {
+      if (property == null)
+        return;
 
+
+      //// If the value is empty always add a space
+      //// otherwise the property will keep 
+      //// displaying it's previous value
+      if (String.IsNullOrEmpty(value))
+        value = " ";
+
+      GUIPropertyManager.SetProperty(property, value);
+    }
+
+    //// override action responses
     //// override action responses
     public override void OnAction(Action action)
     {
-      switch (action.wID)
+      if (action.wID == Action.ActionType.ACTION_PREVIOUS_MENU)
       {
-      //  // record action
-      //  case Action.ActionType.ACTION_RECORD:
-      //    ExecuteRecord();
-      //    break;
+        if (listControl.Focus)
+        {
+          if (grabber.Parent != null && grabber.Parent.Body.Count > 0)
+          {
+            DoBack();
+            return;
+          }
+        }
+      }
 
-        // back or return action
-        //case Action.ActionType.ACTION_EXIT:
-        //  ExecuteBack();
-        //  break;
-        //case Action.ActionType.ACTION_PREVIOUS_MENU:
-        //  ExecuteBack();
-        //  break;
+      if (action.wID == Action.ActionType.ACTION_PARENT_DIR)
+      {
+        GUIListItem item = listControl[0];
 
-      //  // context menu for fav adding and removing
-      //  case Action.ActionType.ACTION_CONTEXT_MENU:
-      //    // do the right action
-      //    switch (curState)
-      //    {
-      //      case SDutils.PluginState.showingFavorites:
-      //        //show the context with remove
-      //        ExecuteContextFavoritesView();
-      //        break;
-      //      case SDutils.PluginState.showingStations:
-      //        //show the context with add
-      //        ExecuteContextStationsView();
-      //        break;
-      //      case SDutils.PluginState.showingGenres:
-      //        // show the context with reload
-      //        ExecuteContextGenresView();
-      //        break;
-      //    }
-      //    break;
-
-      //  // stop pressed
-      //  case Action.ActionType.ACTION_STOP:
-      //    // stop all downloads
-      //    //m_DirectoryListing.StopDownloads();
-      //    // disable update timer
-      //    m_UpdateStationTimer.Enabled = false;
-      //    // relay the action to base
-      //    base.OnAction(action);
-      //    break;
-
-      //  // show stream info (notify window)
-      //  case Action.ActionType.ACTION_SHOW_OSD:
-      //  case Action.ActionType.ACTION_SHOW_INFO:
-      //    // just display the info osd notify
-      //    DisplayStationInfoOSD();
-      //    base.OnAction(action);
-      //    break;
-
-      //  // unkown - relay the action to the base
-        default:
-          base.OnAction(action);
-          break;
+        if ((item != null) && item.IsFolder && (item.Label == ".."))
+        {
+          DoBack();
+          return;
+        }
       }
       UpdateGui();
+      base.OnAction(action);
     }
     // do regulary updates
     public override void Process()
@@ -382,10 +375,10 @@ namespace RadioTimePlugin
       GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
       if (dlg == null) return;
       dlg.Reset();
-      dlg.SetHeading(25653); // Sort options
+      dlg.SetHeading(Translation.Sorting); // Sort options
 
-      dlg.AddLocalizedString(25654); // name
-      dlg.AddLocalizedString(25655); // bitrate
+      dlg.Add(Translation.SortByName); // name
+      dlg.Add(Translation.SortByBitrate); // bitrate
       // set the focus to currently used sort method
       dlg.SelectedLabel = (int)curSorting;
 
@@ -393,20 +386,15 @@ namespace RadioTimePlugin
       dlg.DoModal(GetID);
       if (dlg.SelectedId == -1) return;
 
-      switch (dlg.SelectedLabel)
+      if(dlg.SelectedLabelText==Translation.SortByBitrate)
       {
-        case 0:
-          curSorting = StationSort.SortMethod.name;
-          sortButton.Label = GUILocalizeStrings.Get(25654);
-          break;
-        case 1:
           curSorting = StationSort.SortMethod.bitrate;
-          sortButton.Label = GUILocalizeStrings.Get(25655);
-          break;
-        default:
-          curSorting = StationSort.SortMethod.name;
-          sortButton.Label = GUILocalizeStrings.Get(25654);
-          break;
+          sortButton.Label = Translation.SortByBitrate;
+      }
+      else
+      {
+        curSorting = StationSort.SortMethod.name;
+        sortButton.Label = Translation.SortByName;
       }
 
       sortButton.IsAscending = mapSettings.SortAscending;
@@ -463,18 +451,47 @@ namespace RadioTimePlugin
       RadioTimeNowPlaying NowPlaying = new RadioTimeNowPlaying();
       NowPlaying.Get(item.StationId);
       GUIPropertyManager.SetProperty("#Play.Current.Thumb", GetStationLogoFileName(item));
-      if (_setting.UseVideo)
+      PlayerType playerType = PlayerType.Video;
+      if (_setting.FormatPlayer.ContainsKey(item.Formats))
+        playerType = _setting.FormatPlayer[item.Formats];
+      switch (playerType)
       {
-        g_Player.Play(item.Url);
-        GUIPropertyManager.SetProperty("#Play.Current.Title", NowPlaying.Name + "/" + NowPlaying.Description + "/" + NowPlaying.Location);
+        case PlayerType.Audio:
+          g_Player.PlayAudioStream(item.Url);
+          break;
+        case PlayerType.Video:
+          g_Player.Play(item.Url);
+          break;
+        case PlayerType.Unknow:
+          break;
+        default:
+          break;
       }
-      else
-      {
-        g_Player.PlayAudioStream(item.Url);
-      }
-
+      GUIPropertyManager.SetProperty("#Play.Current.Title", NowPlaying.Name + "/" + NowPlaying.Description + "/" + NowPlaying.Location);
     }
 
+    private void DoSearchArtist()
+    {
+      string searchString = "";
+
+      // display an virtual keyboard
+      VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
+      if (null == keyboard) return;
+      keyboard.Reset();
+      keyboard.Text = searchString;
+      keyboard.DoModal(GetWindowId());
+      if (keyboard.IsConfirmed)
+      {
+        // input confirmed -- execute the search
+        searchString = keyboard.Text;
+      }
+
+      if ("" != searchString)
+      {
+        grabber.SearchArtist(searchString);
+        UpdateList();
+      }
+    }
 
     private void DoSearch()
     {
@@ -624,27 +641,21 @@ namespace RadioTimePlugin
            resp = websrv.Tuner_Tune(req);
            if (!resp.TunerResponseXmlView.Station.IsFavorite)
            {
-             dlg.AddLocalizedString(25657);
+             dlg.Add(Translation.RemoveFromFavorites);
            }
          }
          catch
          {
          }
            //add to favoritest
-          dlg.AddLocalizedString(25656);
+         dlg.Add(Translation.AddToFavorites);
          dlg.DoModal(GetID);
          if (dlg.SelectedId == -1)
            return;
-         switch (dlg.SelectedId)
-         {
-           case 25656:
-             AddToFavorites(req.StationId);
-             break;
-           case 25657:
-             RemoveFavorites(req.StationId);
-             break;
-
-         }
+         if (dlg.SelectedLabelText == Translation.AddToFavorites)
+           AddToFavorites(req.StationId);
+         if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
+           RemoveFavorites(req.StationId); ;
        }
        catch(System.Web.Services.Protocols.SoapException ex)
        {
@@ -655,12 +666,12 @@ namespace RadioTimePlugin
     }
 
 
-    public void Err_message(int langid)
+    public void Err_message(string langid)
     {
       GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
       if (dlgOK != null)
       {
-        dlgOK.SetHeading(25660);
+        dlgOK.SetHeading(Translation.Message);
         dlgOK.SetLine(1, langid);
         dlgOK.SetLine(2, "");
         dlgOK.DoModal(GetID);
@@ -672,15 +683,7 @@ namespace RadioTimePlugin
     /// <param name="p">The Station id.</param>
     private void RemoveFavorites(int p)
     {
-
-      Err_message(25658);
-      //FavoriteFolderUpdateRequest req = new FavoriteFolderUpdateRequest();
-      //req.ItemIds = new int[] { p };
-      //req.FolderId = 1;
-      //req.Identification = iden;
-      //websrv.Favorite_StationListDelete(req);
-      //grabber.GetData(grabber.CurentUrl, grabber.CacheIsUsed, false);
-      //UpdateList();
+      Err_message(Translation.UseWebInterfaceToEditFavorites);
     }
 
     /// <summary>
@@ -700,7 +703,7 @@ namespace RadioTimePlugin
       }
       catch (Exception)
       {
-        Err_message(25659);
+        Err_message(Translation.ComunicationError);
       }
     }
 
@@ -713,12 +716,19 @@ namespace RadioTimePlugin
         if (radioItem != null && !string.IsNullOrEmpty(radioItem.Image))
         {
           logoImage.SetFileName(DownloadStationLogo(radioItem));
-          GUIPropertyManager.SetProperty("#nowplaying", radioItem.CurrentTrack);
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", radioItem.CurrentTrack);
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", radioItem.Subtext);
+          if (_setting.FormatNames.ContainsKey(radioItem.Formats))
+            GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", _setting.FormatNames[radioItem.Formats]);
+          else
+            GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", " ");
         }
         else
         {
           logoImage.SetFileName(string.Empty);
-          GUIPropertyManager.SetProperty("#nowplaying", " ");
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", " ");
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", " ");
         }
       }
 
@@ -751,7 +761,7 @@ namespace RadioTimePlugin
     void SortChanged(object sender, SortEventArgs e)
     {
       // save the new state
-      mapSettings.SortAscending = e.Order != System.Windows.Forms.SortOrder.Descending;
+      mapSettings.SortAscending = e.Order != SortOrder.Descending;
       // update the list
       UpdateList();
       //UpdateButtonStates();

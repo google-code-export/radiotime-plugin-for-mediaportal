@@ -6,11 +6,20 @@ using MediaPortal.Configuration;
 
 namespace RadioTimePlugin
 {
+  public enum PlayerType
+  {
+    Audio = 0,
+    Video = 1,
+    Unknow = 2
+  }
+
   public class Settings : RadioTimeSetting
   {
+
+    public Dictionary<string, PlayerType> FormatPlayer { get; set; }
+    public Dictionary<string, string> FormatNames { get; set; }
  
     private string _password;
-
     public string Password
     {
       get { return _password; }
@@ -28,6 +37,31 @@ namespace RadioTimePlugin
     public Settings()
       : base()
     {
+      FormatPlayer = new Dictionary<string, PlayerType>();
+      FormatPlayer.Add("wma", PlayerType.Video);
+      FormatPlayer.Add("mp3", PlayerType.Audio);
+      FormatPlayer.Add("aac", PlayerType.Audio);
+      FormatPlayer.Add("real", PlayerType.Video);
+      FormatPlayer.Add("flash", PlayerType.Video);
+      FormatPlayer.Add("html", PlayerType.Unknow);
+      FormatPlayer.Add("wmpro", PlayerType.Audio);
+      FormatPlayer.Add("wmvoice", PlayerType.Audio);
+      FormatPlayer.Add("wmvideo", PlayerType.Video);
+      FormatPlayer.Add("ogg", PlayerType.Audio);
+      FormatPlayer.Add("qt", PlayerType.Video);
+
+      FormatNames = new Dictionary<string, string>();
+      FormatNames.Add("wma", "WMAudio v8/9/10");
+      FormatNames.Add("mp3", "standard MP3");
+      FormatNames.Add("aac", "AAC and AAC+");
+      FormatNames.Add("real", "Real Media");
+      FormatNames.Add("flash", "RTMP (usually MP3 or AAC encoded)");
+      FormatNames.Add("html", "Usually desktop players");
+      FormatNames.Add("wmpro", "Windows Media Professional");
+      FormatNames.Add("wmvoice", "Windows Media Voice");
+      FormatNames.Add("wmvideo", "Windows Media Video v8/9/10");
+      FormatNames.Add("ogg", "Ogg Vorbis");
+      FormatNames.Add("qt", "Quicktime");
     }
 
     private string pluginName;

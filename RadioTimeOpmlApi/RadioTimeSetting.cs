@@ -133,7 +133,7 @@ namespace RadioTimeOpmlApi
         ext += "wma,";
       if (Real)
         ext += "real";
-      s += "&formats=" + ext;
+      //s += "&formats=" + ext;
       if (!string.IsNullOrEmpty(PartnerId))
       {
         s += "&partnerID=" + PartnerId;
