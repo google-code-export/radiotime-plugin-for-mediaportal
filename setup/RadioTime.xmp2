@@ -206,22 +206,22 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Items />
   </Dependencies>
   <GeneralInfo>
-    <Name>RadiTime</Name>
+    <Name>RadioTime</Name>
     <Id>71cc3381-de92-482d-9556-7e86f67f8067</Id>
     <Author>Dukus</Author>
     <HomePage>http://code.google.com/p/radiotime-plugin-for-mediaportal/</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/radiotime-plugin-40575/</ForumPage>
-    <UpdateUrl />
+    <UpdateUrl>http://radiotime-plugin-for-mediaportal.googlecode.com/svn/trunk/setup/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
       <Minor>5</Minor>
       <Build>3</Build>
       <Revision>0</Revision>
     </Version>
-    <ExtensionDescription>Plugin for browse online radio stations</ExtensionDescription>
+    <ExtensionDescription>Plugin for browse online radio stations from RadioTime.com</ExtensionDescription>
     <VersionDescription>Improved playback </VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation />
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.0.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
