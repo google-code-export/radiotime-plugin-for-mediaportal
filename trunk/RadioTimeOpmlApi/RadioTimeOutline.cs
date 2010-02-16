@@ -44,6 +44,16 @@ namespace RadioTimeOpmlApi
       else
         Bitrate = string.Empty;
 
+      if (node.Attributes["subtext"] != null)
+        Subtext = node.Attributes["subtext"].Value;
+      else
+        Subtext = string.Empty;
+
+      if (node.Attributes["formats"] != null)
+        Formats = node.Attributes["formats"].Value;
+      else
+        Formats = string.Empty;
+
       if (node.Attributes["current_track"] != null)
         CurrentTrack = node.Attributes["current_track"].Value;
       else
@@ -55,6 +65,8 @@ namespace RadioTimeOpmlApi
       }
       else
         Now_playing_id = string.Empty;
+
+
     }
 
     private OutlineType _type;
@@ -106,6 +118,8 @@ namespace RadioTimeOpmlApi
       set { _current_track = value; }
     }
 
+    public string Subtext { get; set; }
+    public string Formats { get; set; }
 
     /// <summary>
     /// Gets the station id.

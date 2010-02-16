@@ -174,6 +174,11 @@ namespace RadioTimeOpmlApi
       GetData(s);
     }
 
+    public void SearchArtist(string sStr)
+    {
+      string s = string.Format("http://opml.radiotime.com/Search.ashx?c=song,artist&query={0}&{1}", sStr, Settings.GetParamString());
+      GetData(s);
+    }
     /// <summary>
     /// Gets the online data.
     /// </summary>
