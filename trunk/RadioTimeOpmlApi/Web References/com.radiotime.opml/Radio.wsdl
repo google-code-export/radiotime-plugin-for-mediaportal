@@ -40,6 +40,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="genreId" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="genre" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="twitterId" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="liveNow" type="s:boolean" />
           <s:element minOccurs="1" maxOccurs="1" name="onDemand" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="trackMetadata" type="tns:trackMetadata" />
@@ -63,6 +64,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="duration" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="associatedShow" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="associatedHost" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="title" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="streamMetadata">
@@ -90,6 +92,8 @@
           <s:element minOccurs="0" maxOccurs="1" name="stationId" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="showId" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="logo" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="isRecurring" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="recurDays" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="mediaCollection">
