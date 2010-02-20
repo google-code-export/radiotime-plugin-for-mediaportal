@@ -20,7 +20,7 @@ using RadioTimeOpmlApi.com.radiotime.services;
 
 namespace RadioTimePlugin
 {
-  public class RadioTimePluginGUI : GUIWindow, ISetupForm
+  public class RadioTimePluginGUI : BaseGui, ISetupForm
   {
 
     #region MapSettings class
@@ -81,14 +81,10 @@ namespace RadioTimePlugin
 
     private RadioTime grabber = new RadioTime();
     private RadioTimeWebService websrv = new RadioTimeWebService();
-    private WebClient Client = new WebClient();
-    private Queue downloaQueue = new Queue();
-    private System.Timers.Timer updateStationLogoTimer = new System.Timers.Timer(0.2* 1000);
-    private DownloadFileObject curentDownlodingFile;
     private Settings _setting = new Settings();
     private Identification iden = new Identification();
     MapSettings mapSettings = new MapSettings();
-
+    private int oldSelection = 0;
     private StationSort.SortMethod curSorting = StationSort.SortMethod.name;
 
     #endregion
@@ -196,20 +192,21 @@ namespace RadioTimePlugin
       {
         if (_setting.ShowPresets)
         {
-          Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
           grabber.GetData(_setting.PresetsUrl, false, false);
         }
         else
         {
+          Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
           grabber.GetData(_setting.StartupUrl);
         }
       }
       UpdateList();
+      listControl.SelectedItem = oldSelection;
       GUIPropertyManager.SetProperty("#header.label", " ");
       GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
       if (sortButton != null)
       {
-        sortButton.SortChanged += new SortEventHandler(SortChanged);
+        sortButton.SortChanged += SortChanged;
       }
 
       // set the sort button label
@@ -233,7 +230,7 @@ namespace RadioTimePlugin
     // remeber the selection on page leave
     protected override void OnPageDestroy(int new_windowId)
     {
-      //oldSelection = listControl.SelectedItem;
+      oldSelection = listControl.SelectedItem;
       base.OnPageDestroy(new_windowId);
     }
     //// do the clicked action
@@ -648,6 +645,7 @@ namespace RadioTimePlugin
          {
          }
            //add to favoritest
+         dlg.Add("Show guid");
          dlg.Add(Translation.AddToFavorites);
          dlg.DoModal(GetID);
          if (dlg.SelectedId == -1)
@@ -656,6 +654,13 @@ namespace RadioTimePlugin
            AddToFavorites(req.StationId);
          if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
            RemoveFavorites(req.StationId); ;
+         if (dlg.SelectedLabelText == "Show guid")
+         {
+           MiniGuide miniGuide = (MiniGuide) GUIWindowManager.GetWindow(25651);
+           miniGuide.GuidId = ((RadioTimeOutline)selectedItem.MusicTag).GuidId;
+           miniGuide.Grabber = grabber;
+           miniGuide.DoModal(GetID);
+         }
        }
        catch(System.Web.Services.Protocols.SoapException ex)
        {
@@ -790,14 +795,6 @@ namespace RadioTimePlugin
       return localFile;
     }
 
-    private void OnDownloadTimedEvent(object source, ElapsedEventArgs e)
-    {
-      if (!Client.IsBusy && downloaQueue.Count>0)
-      {
-        curentDownlodingFile = (DownloadFileObject)downloaQueue.Dequeue();
-        Client.DownloadFileAsync(new Uri(curentDownlodingFile.Url), Path.GetTempPath() + @"\station.png");
-      }
-    }
 
     private void DownloadLogoEnd(object sender, AsyncCompletedEventArgs e)
     {

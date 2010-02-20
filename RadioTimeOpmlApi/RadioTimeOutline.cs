@@ -50,10 +50,34 @@ namespace RadioTimeOpmlApi
         Subtext = string.Empty;
 
       if (node.Attributes["formats"] != null)
+      {
         Formats = node.Attributes["formats"].Value;
+        if (Formats.Contains(","))
+          Formats = Formats.Split(',')[0];
+      }
       else
         Formats = string.Empty;
 
+      if (node.Attributes["duration"] != null)
+        Duration = node.Attributes["duration"].Value;
+      else
+        Duration = string.Empty;
+
+      if (node.Attributes["start"] != null)
+        Start = node.Attributes["start"].Value;
+      else
+        Start = string.Empty;
+
+      if (node.Attributes["guide_id"] != null)
+        GuidId = node.Attributes["guide_id"].Value;
+      else
+        GuidId = string.Empty;
+
+      if (node.Attributes["preset_id"] != null)
+        PresetId = node.Attributes["preset_id"].Value;
+      else
+        PresetId = string.Empty;
+ 
       if (node.Attributes["current_track"] != null)
         CurrentTrack = node.Attributes["current_track"].Value;
       else
@@ -120,22 +144,11 @@ namespace RadioTimeOpmlApi
 
     public string Subtext { get; set; }
     public string Formats { get; set; }
-
-    /// <summary>
-    /// Gets the station id.
-    /// </summary>
-    /// <value>The station id.</value>
-    public string StationId
-    {
-      get
-      {
-        if (Now_playing_id.Contains("station:"))
-        {
-          return Now_playing_id.Substring("station:".Length);
-        }
-        return string.Empty;
-      }
-    }
+    public string Duration { get; set; }
+    public string Start { get; set; }
+    public string StationId { get; set; }
+    public string GuidId { get; set; }
+    public string PresetId { get; set; }
 
     /// <summary>
     /// Gets the station id as int.

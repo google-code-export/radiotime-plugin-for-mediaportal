@@ -693,6 +693,10 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
         
         private string logoField;
         
+        private bool isRecurringField;
+        
+        private string recurDaysField;
+        
         /// <remarks/>
         public string startTime {
             get {
@@ -760,6 +764,26 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
             }
             set {
                 this.logoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool isRecurring {
+            get {
+                return this.isRecurringField;
+            }
+            set {
+                this.isRecurringField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string recurDays {
+            get {
+                return this.recurDaysField;
+            }
+            set {
+                this.recurDaysField = value;
             }
         }
     }
@@ -953,6 +977,8 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
         
         private string associatedHostField;
         
+        private string titleField;
+        
         /// <remarks/>
         public string artistId {
             get {
@@ -1092,6 +1118,16 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
                 this.associatedHostField = value;
             }
         }
+        
+        /// <remarks/>
+        public string title {
+            get {
+                return this.titleField;
+            }
+            set {
+                this.titleField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -1117,6 +1153,8 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
         private string genreIdField;
         
         private string genreField;
+        
+        private string twitterIdField;
         
         private bool liveNowField;
         
@@ -1205,6 +1243,16 @@ namespace RadioTimeOpmlApi.com.radiotime.opml {
             }
             set {
                 this.genreField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string twitterId {
+            get {
+                return this.twitterIdField;
+            }
+            set {
+                this.twitterIdField = value;
             }
         }
         

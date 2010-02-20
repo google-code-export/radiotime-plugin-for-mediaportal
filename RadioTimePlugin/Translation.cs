@@ -241,7 +241,7 @@ namespace RadioTimePlugin
     public static string SortByBitrate = "Sort by bitrate";
     public static string SortByName = "Sort by name";
     public static string Sorting = "Sorting";
-    
+    public static string ShowGiuide = "Show guide";
     
 
     // T
