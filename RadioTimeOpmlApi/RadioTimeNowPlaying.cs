@@ -12,43 +12,37 @@ namespace RadioTimeOpmlApi
   /// </summary>
   public class RadioTimeNowPlaying
   {
-    private string  _stationId;
-    public string  StationId
-    {
-      get { return _stationId; }
-      set { _stationId = value; }
-    }
-
-    private string _name;
-
-    public string Name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-
-    private string _description;
-
-    public string Description
-    {
-      get { return _description; }
-      set { _description = value; }
-    }
+    public string GuidId { get; set; }
     
-    private string _location;
+    public string PresetId { get; set; }
 
-    public string Location
-    {
-      get { return _location; }
-      set { _location = value; }
-    }
+    public string Name { get; set; }
+    
+    public string Image { get; set; }
+    
+    public string ShowImage { get; set; }
 
+    public string Description { get; set; }
+
+    public string Location { get; set; }
+
+    public int Duration { get; set; }
+
+    public int Remains { get; set; }
+    
+    public RadioTime Grabber { get; set; }
+
+    
     public RadioTimeNowPlaying()
     {
-      StationId = string.Empty;
+      GuidId = string.Empty;
       Name = string.Empty;
       Description = string.Empty;
       Location = string.Empty;
+      Duration = 0;
+      Remains = 0;
+      ShowImage = string.Empty;
+      Image = string.Empty;
     }
 
     /// <summary>
@@ -57,46 +51,85 @@ namespace RadioTimeOpmlApi
     /// <param name="stationid">The station id.</param>
     public void Get(string stationid)
     {
-      StationId = stationid;
-      string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}",StationId);
-      Stream response = RetrieveData(sUrl);
-      if (response != null)
+      GuidId = stationid;
+      Grabber.GetData(
+        string.Format("http://opml.radiotime.com/Describe.ashx?c=nowplaying&id={0}&{1}", GuidId, Grabber.Settings.GetParamString()),
+        false, false);
+      int line = 0;
+      foreach (RadioTimeOutline outline in Grabber.Body)
       {
-        StreamReader reader = new StreamReader(response, System.Text.Encoding.UTF8, true);
-        String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
-        response.Close();
-        reader.Close();
-        try
+        if (outline.Key == "station")
         {
-          XmlDocument doc = new XmlDocument();
-          doc.LoadXml(sXmlData);
-          // skip xml node
-          XmlNode root = doc.FirstChild.NextSibling;
-          XmlNode bodynodes = root.SelectSingleNode("body");
-          int i = 1;
-          foreach (XmlNode node in bodynodes)
-          {
-            switch (i)
-            {
-              case 1:
-                Name = node.Attributes["text"].Value;
-                break;
-              case 2:
-                Description = node.Attributes["text"].Value;
-                break;
-              case 3:
-                Location = node.Attributes["text"].Value;
-                break;
-              default:
-                break;
-            }
-            i++;
-          }
+          Image = outline.Image;
+          Name = outline.Text;
+          PresetId = outline.PresetId;
+          GuidId = outline.GuidId;
         }
-        catch
+        
+        if (outline.Key == "show")
         {
+          ShowImage = string.Format("http://radiotime-logos.s3.amazonaws.com/{0}.png", GuidId);
+          Description = outline.Text;
+          int i = 0;
+          if (int.TryParse(outline.Duration, out i))
+            Duration = i;
+          i = 0;
+          if (int.TryParse(outline.Remain, out i))
+            Remains = i;
         }
+        switch (line)
+        {
+          case 1:
+            Description = outline.Text;
+            break;
+          case 2:
+            Location = outline.Text;
+            break;
+        }
+        line++;
       }
+
+      if (string.IsNullOrEmpty(ShowImage))
+        ShowImage = Image;
+      //string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}",StationId);
+      //Stream response = RetrieveData(sUrl);
+      //if (response != null)
+      //{
+      //  StreamReader reader = new StreamReader(response, System.Text.Encoding.UTF8, true);
+      //  String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
+      //  response.Close();
+      //  reader.Close();
+      //  try
+      //  {
+      //    XmlDocument doc = new XmlDocument();
+      //    doc.LoadXml(sXmlData);
+      //    // skip xml node
+      //    XmlNode root = doc.FirstChild.NextSibling;
+      //    XmlNode bodynodes = root.SelectSingleNode("body");
+      //    int i = 1;
+      //    foreach (XmlNode node in bodynodes)
+      //    {
+      //      switch (i)
+      //      {
+      //        case 1:
+      //          Name = node.Attributes["text"].Value;
+      //          break;
+      //        case 2:
+      //          Description = node.Attributes["text"].Value;
+      //          break;
+      //        case 3:
+      //          Location = node.Attributes["text"].Value;
+      //          break;
+      //        default:
+      //          break;
+      //      }
+      //      i++;
+      //    }
+      //  }
+      //  catch
+      //  {
+      //  }
+      //}
     }
 
     /// <summary>

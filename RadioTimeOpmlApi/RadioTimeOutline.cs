@@ -22,32 +22,35 @@ namespace RadioTimeOpmlApi
 
     public RadioTimeOutline(XmlNode node)
     {
-      if (node.Attributes["type"].Value == "link")
-        Type = OutlineType.link;
-      else
-        if (node.Attributes["type"].Value == "audio")
-          Type = OutlineType.audio;
-        else Type = OutlineType.unknow;
-      Text = node.Attributes["text"].Value;
+      if (node.Attributes["type"] != null)
+      {
+        switch (node.Attributes["type"].Value)
+        {
+          case "link":
+            Type = OutlineType.link;
+            break;
+          case "audio":
+            Type = OutlineType.audio;
+            break;
+          default:
+            Type = OutlineType.unknow;
+            break;
+        }
+      }
+
+        Text = node.Attributes["text"] != null ? node.Attributes["text"].Value : string.Empty;
+      
       if (node.Attributes["url"] != null)
         Url = node.Attributes["url"].Value;
+      
       if (node.Attributes["URL"] != null)
         Url = node.Attributes["URL"].Value;
       
-      if (node.Attributes["image"] != null)
-        Image = node.Attributes["image"].Value;
-      else
-        Image = string.Empty;
+      Image = node.Attributes["image"] != null ? node.Attributes["image"].Value : string.Empty;
 
-      if (node.Attributes["bitrate"] != null)
-        Bitrate = node.Attributes["bitrate"].Value;
-      else
-        Bitrate = string.Empty;
+      Bitrate = node.Attributes["bitrate"] != null ? node.Attributes["bitrate"].Value : string.Empty;
 
-      if (node.Attributes["subtext"] != null)
-        Subtext = node.Attributes["subtext"].Value;
-      else
-        Subtext = string.Empty;
+      Subtext = node.Attributes["subtext"] != null ? node.Attributes["subtext"].Value : string.Empty;
 
       if (node.Attributes["formats"] != null)
       {
@@ -58,97 +61,41 @@ namespace RadioTimeOpmlApi
       else
         Formats = string.Empty;
 
-      if (node.Attributes["duration"] != null)
-        Duration = node.Attributes["duration"].Value;
-      else
-        Duration = string.Empty;
+      Duration = node.Attributes["duration"] != null ? node.Attributes["duration"].Value : string.Empty;
 
-      if (node.Attributes["start"] != null)
-        Start = node.Attributes["start"].Value;
-      else
-        Start = string.Empty;
+      Start = node.Attributes["start"] != null ? node.Attributes["start"].Value : string.Empty;
 
-      if (node.Attributes["guide_id"] != null)
-        GuidId = node.Attributes["guide_id"].Value;
-      else
-        GuidId = string.Empty;
+      GuidId = node.Attributes["guide_id"] != null ? node.Attributes["guide_id"].Value : string.Empty;
 
-      if (node.Attributes["preset_id"] != null)
-        PresetId = node.Attributes["preset_id"].Value;
-      else
-        PresetId = string.Empty;
+      PresetId = node.Attributes["preset_id"] != null ? node.Attributes["preset_id"].Value : string.Empty;
  
-      if (node.Attributes["current_track"] != null)
-        CurrentTrack = node.Attributes["current_track"].Value;
-      else
-        CurrentTrack = string.Empty;
+      CurrentTrack = node.Attributes["current_track"] != null ? node.Attributes["current_track"].Value : string.Empty;
 
-      if (Type == OutlineType.audio)
-      {
-        Now_playing_id = node.Attributes["now_playing_id"].Value;
-      }
-      else
-        Now_playing_id = string.Empty;
+      Key = node.Attributes["key"] != null ? node.Attributes["key"].Value : string.Empty;
+
+      Remain = node.Attributes["seconds_remaining"] != null ? node.Attributes["seconds_remaining"].Value : string.Empty;
+
+      //Now_playing_id = Type == OutlineType.audio ? node.Attributes["now_playing_id"].Value : string.Empty;
 
 
     }
 
-    private OutlineType _type;
-    public OutlineType Type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-
-    private string _text;
-    public string Text
-    {
-      get { return _text; }
-      set { _text = value; }
-    }
-
-    private string _url;
-    public string Url
-    {
-      get { return _url; }
-      set { _url = value; }
-    }
-
-    private string _image;
-    public string Image
-    {
-      get { return _image; }
-      set { _image = value; }
-    }
-
-    private string _now_playing_id;
-    public string Now_playing_id
-    {
-      get { return _now_playing_id; }
-      set { _now_playing_id = value; }
-    }
-
-    private string _bitrate;
-    public string Bitrate
-    {
-      get { return _bitrate; }
-      set { _bitrate = value; }
-    }
-
-    private string _current_track;
-    public string CurrentTrack
-    {
-      get { return _current_track; }
-      set { _current_track = value; }
-    }
-
+    public OutlineType Type { get; set; }
+    public string Text { get; set; }
+    public string Url { get; set; }
+    public string Image { get; set; }
+    public string Now_playing_id { get; set; }
+    public string Bitrate { get; set; }
+    public string CurrentTrack { get; set; }
     public string Subtext { get; set; }
     public string Formats { get; set; }
     public string Duration { get; set; }
+    public string Remain { get; set; }
     public string Start { get; set; }
     public string StationId { get; set; }
     public string GuidId { get; set; }
     public string PresetId { get; set; }
+    public string Key { get; set; }
 
     /// <summary>
     /// Gets the station id as int.

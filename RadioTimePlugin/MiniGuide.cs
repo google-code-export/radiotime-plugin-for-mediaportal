@@ -93,14 +93,13 @@ namespace RadioTimePlugin
       foreach (var body in Grabber.Body)
       {
         GUIListItem item = new GUIListItem("");
-        item.Label2 = body.Text;
-        item.Label = body.Duration;
-        item.Label3 = body.Start;
+        item.Label2 = ToMinutes(body.Duration);
+        item.Label = body.Start;
+        item.Label3 = body.Text;
         item.MusicTag = body;
         DownloadFile(body);
         item.OnRetrieveArt += item_OnRetrieveArt;
         lstChannelsWithStateIcons.Add(item);
-
       }
       if (lstChannelsWithStateIcons.GetID == 37)
       {
