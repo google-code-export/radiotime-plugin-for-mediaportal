@@ -110,11 +110,14 @@ namespace Test
     {
       if (listView1.SelectedItems.Count > 0)
       {
-        StationNowPlayingListGetRequest req = new StationNowPlayingListGetRequest();
-        int i = 0;
-        int.TryParse(((RadioTimeOutline)listView1.SelectedItems[0].Tag).StationId, out i);
-        req.StationIds = new int[] { i };
-        propertyGrid1.SelectedObject = websrv.Station_NowPlayingListGet(req);
+        //StationNowPlayingListGetRequest req = new StationNowPlayingListGetRequest();
+        //int i = 0;
+        //int.TryParse(((RadioTimeOutline)listView1.SelectedItems[0].Tag).StationId, out i);
+        //req.StationIds = new int[] { i };
+        //propertyGrid1.SelectedObject = websrv.Station_NowPlayingListGet(req);
+        RadioTimeNowPlaying playing = new RadioTimeNowPlaying();
+        playing.Grabber = grabber;
+        playing.Get(((RadioTimeOutline) listView1.SelectedItems[0].Tag).GuidId);
       }
     }
 

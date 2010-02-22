@@ -114,14 +114,30 @@ namespace RadioTimePlugin
       GetID = GetWindowId();
       updateStationLogoTimer.AutoReset = true;
       updateStationLogoTimer.Enabled = false;
-      updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
-      Client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadLogoEnd);
+      updateStationLogoTimer.Elapsed += OnDownloadTimedEvent;
+      Client.DownloadFileCompleted += DownloadLogoEnd;
+      g_Player.PlayBackStopped += g_Player_PlayBackStopped;
       _setting.Load();
       iden.UserName = _setting.User;
       iden.PasswordKey = RadioTimeWebServiceHelper.HashMD5(_setting.Password);
       iden.PartnerId = "MediaPortal";
       iden.PartnerKey = "NVNxA8N$6VD1";
     }
+
+    void g_Player_PlayBackStopped(g_Player.MediaType type, int stoptime, string filename)
+    {
+      ClearProps();
+    }
+
+    void ClearProps()
+    {
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Station", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Play.StationLogo", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Duration", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Description", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", " "); 
+    }
+    
     #region ISetupForm Members
     // return name of the plugin
     public string PluginName()
@@ -445,8 +461,9 @@ namespace RadioTimePlugin
     /// <param name="item">The item.</param>
     private void DoPlay(RadioTimeOutline item)
     {
-      RadioTimeNowPlaying NowPlaying = new RadioTimeNowPlaying();
-      NowPlaying.Get(item.StationId);
+      var nowPlaying = new RadioTimeNowPlaying();
+      nowPlaying.Grabber = grabber;
+      nowPlaying.Get(item.GuidId);
       GUIPropertyManager.SetProperty("#Play.Current.Thumb", GetStationLogoFileName(item));
       PlayerType playerType = PlayerType.Video;
       if (_setting.FormatPlayer.ContainsKey(item.Formats))
@@ -464,7 +481,13 @@ namespace RadioTimePlugin
         default:
           break;
       }
-      GUIPropertyManager.SetProperty("#Play.Current.Title", NowPlaying.Name + "/" + NowPlaying.Description + "/" + NowPlaying.Location);
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Station", nowPlaying.Name);
+      //GUIPropertyManager.SetProperty("#RadioTime.Play.StationLogo", GetStationLogoFileName(nowPlaying.Image));
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Duration", nowPlaying.Duration.ToString());
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Description", nowPlaying.Description);
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", nowPlaying.Location); 
+
+      GUIPropertyManager.SetProperty("#Play.Current.Title", nowPlaying.Name + "/" + nowPlaying.Description + "/" + nowPlaying.Location);
     }
 
     private void DoSearchArtist()
@@ -472,7 +495,7 @@ namespace RadioTimePlugin
       string searchString = "";
 
       // display an virtual keyboard
-      VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
+      var keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_KEYBOARD);
       if (null == keyboard) return;
       keyboard.Reset();
       keyboard.Text = searchString;

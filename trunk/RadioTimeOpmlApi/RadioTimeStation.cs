@@ -11,14 +11,16 @@ namespace RadioTimeOpmlApi
   public class RadioTimeStation
   {
 
-    public void Get(string stationid)
+    public string GuideId { get; set; }
+
+    public void Get(string guideid)
     {
-      StationId = stationid;
-      string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}", StationId);
+      GuideId = guideid;
+      string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}", GuideId);
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {
-        StreamReader reader = new StreamReader(response, System.Text.Encoding.UTF8, true);
+        StreamReader reader = new StreamReader(response, Encoding.UTF8, true);
         String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
         response.Close();
         reader.Close();

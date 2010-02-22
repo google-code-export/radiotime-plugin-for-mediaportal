@@ -68,6 +68,13 @@
               <ZipFileName>Installer{CopyFile}\{f24073dd-0a4a-4a3c-b714-359c48a2432d}-radiotime_logo.png</ZipFileName>
               <DestinationFilename>%Skin%\Blue3wide\Media\radiotime_logo.png</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\RadioTimeMiniGuide.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{968772ef-5a85-406a-a0fc-8e63ea4708fa}-RadioTimeMiniGuide.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Blue3wide\RadioTimeMiniGuide.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -97,6 +104,13 @@
               <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
               <ZipFileName>Installer{GenericSkinFile}\{70b94f79-d7d1-4706-b6e9-cca6ac20650c}-radiotime_logo.png</ZipFileName>
               <DestinationFilename>%Skin%\[DEFAULT]\Media\radiotime_logo.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="GenericSkinFile" SystemFile="false" Modified="false">
+              <Param1>Blue3wide</Param1>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\RadioTimeMiniGuide.xml</LocalFileName>
+              <ZipFileName>Installer{GenericSkinFile}\{5f3e5918-6dd0-4048-bc97-7bbc06f1859c}-RadioTimeMiniGuide.xml</ZipFileName>
+              <DestinationFilename>%Skin%\[DEFAULT]\RadioTimeMiniGuide.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -216,12 +230,12 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>0</Major>
       <Minor>5</Minor>
       <Build>3</Build>
-      <Revision>0</Revision>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>Plugin for browse online radio stations from RadioTime.com</ExtensionDescription>
-    <VersionDescription>Improved playback </VersionDescription>
+    <VersionDescription>Radio guide  </VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.0.mpe1</OnlineLocation>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.1.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
@@ -302,6 +316,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{f24073dd-0a4a-4a3c-b714-359c48a2432d}-radiotime_logo.png</ZipFileName>
         <DestinationFilename>%Skin%\Blue3wide\Media\radiotime_logo.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>skin\Blue3wide\RadioTimeMiniGuide.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{968772ef-5a85-406a-a0fc-8e63ea4708fa}-RadioTimeMiniGuide.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide\RadioTimeMiniGuide.xml</DestinationFilename>
       </FileItem>
     </Items>
   </UniqueFileList>
