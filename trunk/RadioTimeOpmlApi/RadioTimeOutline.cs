@@ -72,6 +72,8 @@ namespace RadioTimeOpmlApi
       CurrentTrack = node.Attributes["current_track"] != null ? node.Attributes["current_track"].Value : string.Empty;
 
       Key = node.Attributes["key"] != null ? node.Attributes["key"].Value : string.Empty;
+      
+      GenreId = node.Attributes["genre_id"] != null ? node.Attributes["genre_id"].Value : string.Empty;
 
       Remain = node.Attributes["seconds_remaining"] != null ? node.Attributes["seconds_remaining"].Value : string.Empty;
 
@@ -79,7 +81,8 @@ namespace RadioTimeOpmlApi
 
 
     }
-
+    
+    public string GenreId { get; set; }
     public OutlineType Type { get; set; }
     public string Text { get; set; }
     public string Url { get; set; }

@@ -35,8 +35,6 @@ namespace RadioTimePlugin
       }
       catch (Exception)
       {
-        // when running MovingPicturesConfigTester outside of the MediaPortal directory this happens unfortunately
-        // so we grab the active culture name from the system            
         lang = CultureInfo.CurrentUICulture.Name;
         _info = DateTimeFormatInfo.GetInstance(CultureInfo.CurrentUICulture);
       }
@@ -214,6 +212,8 @@ namespace RadioTimePlugin
     // F
  
     // G
+    public static string Genres = "Genres";
+
 
     // H
     public static string Home = "Home";
@@ -242,9 +242,10 @@ namespace RadioTimePlugin
     public static string SortByName = "Sort by name";
     public static string Sorting = "Sorting";
     public static string ShowGiuide = "Show guide";
-    
+    public static string StationNotAvaiable = "The station isn't avaiable";    
 
     // T
+
 
     // U
     public static string UseWebInterfaceToEditFavorites = "Use web interface to edit favorites";

@@ -104,6 +104,8 @@ namespace RadioTimePlugin
     protected GUIButtonControl presetsButton = null;
     [SkinControlAttribute(7)]
     protected GUIButtonControl searchArtistButton = null;
+    [SkinControlAttribute(8)]
+    protected GUIButtonControl genresButton = null;
 
     [SkinControlAttribute(51)]
     protected GUIImage logoImage = null;
@@ -122,6 +124,9 @@ namespace RadioTimePlugin
       iden.PasswordKey = RadioTimeWebServiceHelper.HashMD5(_setting.Password);
       iden.PartnerId = "MediaPortal";
       iden.PartnerKey = "NVNxA8N$6VD1";
+      grabber.Settings.User = _setting.User;
+      grabber.Settings.Password = _setting.Password;
+      grabber.Settings.PartnerId = _setting.PartnerId;
     }
 
     void g_Player_PlayBackStopped(g_Player.MediaType type, int stoptime, string filename)
@@ -197,6 +202,7 @@ namespace RadioTimePlugin
     // init the skin
     public override bool Init()
     {
+      _setting.Language = GUILocalizeStrings.GetCultureName(GUILocalizeStrings.CurrentLanguage());
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotime.xml");
     }
@@ -217,7 +223,7 @@ namespace RadioTimePlugin
         }
       }
       UpdateList();
-      listControl.SelectedItem = oldSelection;
+      listControl.SelectedListItemIndex = oldSelection;
       GUIPropertyManager.SetProperty("#header.label", " ");
       GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
       if (sortButton != null)
@@ -241,12 +247,21 @@ namespace RadioTimePlugin
         SetProperty("#RadioTime.Translation." + name + ".Label", Translation.Strings[name]);
       }
 
+      g_Player.PlayBackStarted += g_Player_PlayBackStarted;
+
       base.OnPageLoad();
+    }
+
+    void g_Player_PlayBackStarted(g_Player.MediaType type, string filename)
+    {
+      if (g_Player.IsVideo)
+        g_Player.ShowFullScreenWindow();
     }
     // remeber the selection on page leave
     protected override void OnPageDestroy(int new_windowId)
     {
-      oldSelection = listControl.SelectedItem;
+      oldSelection = listControl.SelectedListItemIndex;
+      g_Player.PlayBackStarted -= g_Player_PlayBackStarted;
       base.OnPageDestroy(new_windowId);
     }
     //// do the clicked action
@@ -316,6 +331,13 @@ namespace RadioTimePlugin
         DoHome();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
+      else if (control == genresButton)
+      {
+        mapSettings.ViewAs = (int)View.List;
+        ShowPanel();
+        DoGenres();
+        GUIControl.FocusControl(GetID, listControl.GetID);
+      }
       else if (control == presetsButton)
       {
         DoPresets();
@@ -329,6 +351,15 @@ namespace RadioTimePlugin
       Log.Debug("RadioTime page loading :{0}", _setting.StartupUrl);
       grabber.Reset();
       grabber.GetData(_setting.StartupUrl);
+      UpdateList();
+    }
+
+
+    private void DoGenres()
+    {
+      Log.Debug("RadioTime page loading :{0}", _setting.GenresUrl);
+      grabber.Reset();
+      grabber.GetData(_setting.GenresUrl);
       UpdateList();
     }
 
@@ -435,13 +466,31 @@ namespace RadioTimePlugin
           switch (radioItem.Type)
           {
             case RadioTimeOutline.OutlineType.link:
-              grabber.GetData(radioItem.Url);
+              if (string.IsNullOrEmpty(radioItem.Url))
+              {
+                grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
+                                              grabber.Settings.GetParamString()));
+              }
+              else
+              {
+                grabber.GetData(radioItem.Url);                
+              }
               UpdateList();
               break;
             case RadioTimeOutline.OutlineType.audio:
               DoPlay(radioItem);
               break;
             default:
+              if (string.IsNullOrEmpty(radioItem.Url))
+              {
+                grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
+                                              grabber.Settings.GetParamString()));
+              }
+              else
+              {
+                grabber.GetData(radioItem.Url);
+              }
+              UpdateList();
               break;
           }
         }
@@ -461,20 +510,43 @@ namespace RadioTimePlugin
     /// <param name="item">The item.</param>
     private void DoPlay(RadioTimeOutline item)
     {
+      RadioTimeStation station = new RadioTimeStation { Grabber = grabber };
+
+      station.Get(item.GuidId);
+      if(!station.IsAvailable)
+      {
+        Err_message(Translation.StationNotAvaiable);
+        return;
+      }
       var nowPlaying = new RadioTimeNowPlaying();
       nowPlaying.Grabber = grabber;
       nowPlaying.Get(item.GuidId);
       GUIPropertyManager.SetProperty("#Play.Current.Thumb", GetStationLogoFileName(item));
+      
       PlayerType playerType = PlayerType.Video;
       if (_setting.FormatPlayer.ContainsKey(item.Formats))
         playerType = _setting.FormatPlayer[item.Formats];
+
+      
+      string TargetFile = Path.GetTempFileName();
+      WebClient client = new WebClient();
+      client.DownloadFile(item.Url, TargetFile);
+      IPlayListIO loader = new PlayListM3uIO();
+      PlayList playList = new PlayList();
+      loader.Load(playList, TargetFile);
+      
+      
       switch (playerType)
       {
         case PlayerType.Audio:
-          g_Player.PlayAudioStream(item.Url);
+          g_Player.PlayAudioStream(playList[0].FileName);
           break;
         case PlayerType.Video:
-          g_Player.Play(item.Url);
+          // test if the station have tv group
+          if (item.GenreId == "g260" || item.GenreId == "g83" || item.GenreId == "g374" || item.GenreId == "g2769")
+            g_Player.PlayVideoStream(playList[0].FileName);
+          else
+            g_Player.Play(playList[0].FileName, g_Player.MediaType.Unknown);
           break;
         case PlayerType.Unknow:
           break;
@@ -485,7 +557,7 @@ namespace RadioTimePlugin
       //GUIPropertyManager.SetProperty("#RadioTime.Play.StationLogo", GetStationLogoFileName(nowPlaying.Image));
       GUIPropertyManager.SetProperty("#RadioTime.Play.Duration", nowPlaying.Duration.ToString());
       GUIPropertyManager.SetProperty("#RadioTime.Play.Description", nowPlaying.Description);
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", nowPlaying.Location); 
+      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", nowPlaying.Location);
 
       GUIPropertyManager.SetProperty("#Play.Current.Title", nowPlaying.Name + "/" + nowPlaying.Description + "/" + nowPlaying.Location);
     }
@@ -574,7 +646,7 @@ namespace RadioTimePlugin
         item.ThumbnailImage = GetStationLogoFileName(body);
         item.IconImage = GetStationLogoFileName(body);
         item.IsFolder = false;
-        item.OnItemSelected += new GUIListItem.ItemSelectedHandler(item_OnItemSelected);
+        item.OnItemSelected += item_OnItemSelected;
         item.MusicTag = body;
         listControl.Add(item);
         DownloadStationLogo(body);
@@ -645,39 +717,32 @@ namespace RadioTimePlugin
        //  return;
        try
        {
-         GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+         var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
          if (dlg == null)
            return;
          dlg.Reset();
          dlg.SetHeading(498); // menu
-         TuneResponse resp = new TuneResponse();
-         TuneRequest req = new TuneRequest();
-         try
-         {
-           req.StationId = ((RadioTimeOutline)selectedItem.MusicTag).StationIdAsInt;
-           req.Identification = iden;
-           req.Settings = new RadioTimeOpmlApi.com.radiotime.services.Settings();
-           Log.Debug("[Radiotime]Geting info for id {0}", req.StationId.ToString());
-           resp = websrv.Tuner_Tune(req);
-           if (!resp.TunerResponseXmlView.Station.IsFavorite)
-           {
-             dlg.Add(Translation.RemoveFromFavorites);
-           }
-         }
-         catch
-         {
-         }
-           //add to favoritest
-         dlg.Add("Show guid");
-         dlg.Add(Translation.AddToFavorites);
+         RadioTimeStation station = new RadioTimeStation {Grabber = grabber};
+        
+         station.Get(((RadioTimeOutline)selectedItem.MusicTag).GuidId);
+
+         if (station.IsPreset)
+           dlg.Add(Translation.RemoveFromFavorites);
+         else
+           dlg.Add(Translation.AddToFavorites); 
+         
+         if(station.HasSchedule)
+           dlg.Add(Translation.ShowGiuide);
+         
          dlg.DoModal(GetID);
          if (dlg.SelectedId == -1)
            return;
          if (dlg.SelectedLabelText == Translation.AddToFavorites)
-           AddToFavorites(req.StationId);
+           AddToFavorites(((RadioTimeOutline) selectedItem.MusicTag).PresetId);
          if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
-           RemoveFavorites(req.StationId); ;
-         if (dlg.SelectedLabelText == "Show guid")
+           RemoveFavorites(((RadioTimeOutline)selectedItem.MusicTag).PresetId); ;
+       
+         if (dlg.SelectedLabelText == Translation.ShowGiuide)
          {
            MiniGuide miniGuide = (MiniGuide) GUIWindowManager.GetWindow(25651);
            miniGuide.GuidId = ((RadioTimeOutline)selectedItem.MusicTag).GuidId;
@@ -709,25 +774,29 @@ namespace RadioTimePlugin
     /// Removes the favorites.
     /// </summary>
     /// <param name="p">The Station id.</param>
-    private void RemoveFavorites(int p)
+    private void RemoveFavorites(string presetid)
     {
-      Err_message(Translation.UseWebInterfaceToEditFavorites);
+      try
+      {
+        grabber.RemovePreset(presetid);
+        UpdateList();
+      }
+      catch (Exception)
+      {
+        Err_message(Translation.ComunicationError);
+      }
     }
 
     /// <summary>
     /// Adds to favorites.
     /// </summary>
     /// <param name="p">The station id.</param>
-    private void AddToFavorites(int p)
+    private void AddToFavorites(string presetid )
     {
       try
       {
-        FavoriteFolderUpdateRequest req = new FavoriteFolderUpdateRequest();
-        req.ItemIds = new int[] { p };
-        req.Identification = iden;
-        websrv.Favorite_StationListAdd(req);
-        grabber.GetData(grabber.CurentUrl, grabber.CacheIsUsed, false);
-        UpdateList();
+        grabber.AddPreset(presetid);
+        //UpdateList();
       }
       catch (Exception)
       {

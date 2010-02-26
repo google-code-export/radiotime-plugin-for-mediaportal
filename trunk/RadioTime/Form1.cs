@@ -184,15 +184,18 @@ namespace Test
 
     private void button10_Click(object sender, EventArgs e)
     {
-      
-      if (listView1.SelectedItems.Count > 0)
-      {
-        StationGetRequest req = new StationGetRequest();
-        int i = 0;
-        req.StationId = ((RadioTimeOutline)listView1.SelectedItems[0].Tag).StationIdAsInt;
-        propertyGrid1.SelectedObject = websrv.Station_Get(req);
-        MessageBox.Show("Test");
-      }
+     
+      RadioTimeStation station = new RadioTimeStation();
+      station.Grabber = grabber;
+      station.Get("s109401");
+      //if (listView1.SelectedItems.Count > 0)
+      //{
+      //  StationGetRequest req = new StationGetRequest();
+      //  int i = 0;
+      //  req.StationId = ((RadioTimeOutline)listView1.SelectedItems[0].Tag).StationIdAsInt;
+      //  propertyGrid1.SelectedObject = websrv.Station_Get(req);
+      //  MessageBox.Show("Test");
+      //}
 
     }
 

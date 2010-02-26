@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Xml;
+using MediaPortal.GUI.Library;
 
 namespace RadioTimeOpmlApi
 {
@@ -51,12 +52,14 @@ namespace RadioTimeOpmlApi
     /// <param name="stationid">The station id.</param>
     public void Get(string stationid)
     {
+      RadioTime gr = new RadioTime();
+      gr.Settings = Grabber.Settings;
       GuidId = stationid;
-      Grabber.GetData(
-        string.Format("http://opml.radiotime.com/Describe.ashx?c=nowplaying&id={0}&{1}", GuidId, Grabber.Settings.GetParamString()),
-        false, false);
+      string url = string.Format("http://opml.radiotime.com/Describe.ashx?c=nowplaying&id={0}&{1}", GuidId,
+                                 Grabber.Settings.GetParamString());
+      gr.GetData(url,false, false);
       int line = 0;
-      foreach (RadioTimeOutline outline in Grabber.Body)
+      foreach (RadioTimeOutline outline in gr.Body)
       {
         if (outline.Key == "station")
         {
@@ -91,45 +94,6 @@ namespace RadioTimeOpmlApi
 
       if (string.IsNullOrEmpty(ShowImage))
         ShowImage = Image;
-      //string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}",StationId);
-      //Stream response = RetrieveData(sUrl);
-      //if (response != null)
-      //{
-      //  StreamReader reader = new StreamReader(response, System.Text.Encoding.UTF8, true);
-      //  String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
-      //  response.Close();
-      //  reader.Close();
-      //  try
-      //  {
-      //    XmlDocument doc = new XmlDocument();
-      //    doc.LoadXml(sXmlData);
-      //    // skip xml node
-      //    XmlNode root = doc.FirstChild.NextSibling;
-      //    XmlNode bodynodes = root.SelectSingleNode("body");
-      //    int i = 1;
-      //    foreach (XmlNode node in bodynodes)
-      //    {
-      //      switch (i)
-      //      {
-      //        case 1:
-      //          Name = node.Attributes["text"].Value;
-      //          break;
-      //        case 2:
-      //          Description = node.Attributes["text"].Value;
-      //          break;
-      //        case 3:
-      //          Location = node.Attributes["text"].Value;
-      //          break;
-      //        default:
-      //          break;
-      //      }
-      //      i++;
-      //    }
-      //  }
-      //  catch
-      //  {
-      //  }
-      //}
     }
 
     /// <summary>

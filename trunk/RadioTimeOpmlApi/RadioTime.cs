@@ -105,6 +105,27 @@ namespace RadioTimeOpmlApi
     }
 
     /// <summary>
+    /// Adds the preset.
+    /// </summary>
+    /// <param name="id">The preset id.</param>
+    public void AddPreset(string id)
+    {
+      WebClient client=new WebClient();
+      string url = string.Format(
+        "http://opml.radiotime.com/Preset.ashx?c=add&id={0}&partnerId={1}&username={2}&password={3}", id,
+        Settings.PartnerId, Settings.User, Settings.Password);
+     client.DownloadString(url);
+    }
+
+    public void RemovePreset(string id)
+    {
+      WebClient client = new WebClient();
+      string url = string.Format(
+        "http://opml.radiotime.com/Preset.ashx?c=remove&id={0}&partnerId={1}&username={2}&password={3}", id,
+        Settings.PartnerId, Settings.User, Settings.Password);
+      client.DownloadString(url);
+    }
+    /// <summary>
     /// Initializes a new instance of the <see cref="RadioTime"/> class.
     /// </summary>
     public RadioTime()
