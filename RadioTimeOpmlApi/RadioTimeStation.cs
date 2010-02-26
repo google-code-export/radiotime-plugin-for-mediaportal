@@ -10,13 +10,28 @@ namespace RadioTimeOpmlApi
 {
   public class RadioTimeStation
   {
+    public RadioTimeStation()
+    {
+      Genres = new List<RadioTimeOutline>();
+      Similar = new List<RadioTimeOutline>();
+    }
 
     public string GuideId { get; set; }
+    public RadioTime Grabber { get; set; }
+    public List<RadioTimeOutline> Genres { get; set; }
+    public List<RadioTimeOutline> Similar { get; set; }
 
+    public bool IsPreset { get; set; }
+    public bool IsAvailable { get; set; }
+    public bool HasSchedule { get; set; }
+    public string Language { get; set; }
+    public string Location { get; set; }
+    public string Frequency { get; set; }
+    
     public void Get(string guideid)
     {
       GuideId = guideid;
-      string sUrl = string.Format("http://opml.radiotime.com/NowPlaying.aspx?stationId={0}", GuideId);
+      string sUrl = string.Format("http://opml.radiotime.com/Describe.ashx?id={0}&detail=genre,recommendation&{1}", GuideId, Grabber.Settings.GetParamString());
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {
@@ -31,11 +46,52 @@ namespace RadioTimeOpmlApi
           // skip xml node
           XmlNode root = doc.FirstChild.NextSibling;
           XmlNode bodynodes = root.SelectSingleNode("body");
-          int i = 1;
+          int i = 0;
           foreach (XmlNode node in bodynodes)
           {
+            switch (i)
+            {
+              case 0:
+                foreach (XmlNode childNode in node.ChildNodes[0].ChildNodes)
+                {
+                  switch (childNode.Name)
+                  {
+                    case "language":
+                      Language = childNode.InnerText;
+                      break;
+                    case "frequency":
+                      Frequency = childNode.InnerText;
+                      break;
+                    case "location":
+                      Location = childNode.InnerText;
+                      break;
+                    case "is_preset":
+                      IsPreset = childNode.InnerText == "false" ? false : true;
+                      break;
+                    case "is_available":
+                      IsAvailable = childNode.InnerText == "false" ? false : true;
+                      break;
+                    case "has_schedule":
+                      HasSchedule = childNode.InnerText == "false" ? false : true;
+                      break;
+                  }
 
-            
+                }
+                break;
+              case 1:
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                  Genres.Add(new RadioTimeOutline(childNode));
+                }
+                break;
+              case 2:
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                  Similar.Add(new RadioTimeOutline(childNode));
+                }
+                break;
+            }
+ 
             i++;
           }
         }

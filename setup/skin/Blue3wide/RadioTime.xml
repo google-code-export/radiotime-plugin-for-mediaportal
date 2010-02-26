@@ -91,9 +91,18 @@
           <label>#RadioTime.Translation.Home.Label</label>
           <onright>50</onright>
           <onup>3</onup>
-          <ondown>6</ondown>
+          <ondown>8</ondown>
         </control>
 
+		<control>
+          <description>genres</description>
+          <type>button</type>
+          <id>8</id>
+          <label>#RadioTime.Translation.Genres.Label</label>
+          <onright>50</onright>
+          <onup>4</onup>
+          <ondown>6</ondown>
+        </control>
 
         <control>
           <description>My Presets</description>

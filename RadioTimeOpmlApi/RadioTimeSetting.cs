@@ -22,41 +22,20 @@ namespace RadioTimeOpmlApi
       Real = parent.Real;
     }
 
-    private string _user;
-    public string User
-    {
-      get { return _user; }
-      set { _user = value; }
-    }
+    public string Password { get; set; }
 
-    private bool _mp3;
-    public bool Mp3
-    {
-      get { return _mp3; }
-      set { _mp3 = value; }
-    }
 
-    private bool _wma;
-    public bool Wma
-    {
-      get { return _wma; }
-      set { _wma = value; }
-    }
+    public string User { get; set; }
 
-    private bool _real;
-    public bool Real
-    {
-      get { return _real; }
-      set { _real = value; }
-    }
+    public bool Mp3 { get; set; }
 
-    private string _partnerId;
+    public bool Wma { get; set; }
 
-    public string PartnerId
-    {
-      get { return _partnerId; }
-      set { _partnerId = value; }
-    }
+    public bool Real { get; set; }
+
+    public string PartnerId { get; set; }
+
+    public string Language { get; set; }
 
     public string UpdateUrl(string sUrl)
     {
@@ -100,6 +79,21 @@ namespace RadioTimeOpmlApi
       }
     }
 
+    public string GenresUrl
+    {
+      get
+      {
+        if (!string.IsNullOrEmpty(GetParamString()))
+        {
+          return "http://opml.radiotime.com/Describe.ashx?c=genres&" + GetParamString();
+        }
+        else
+        {
+          return "http://opml.radiotime.com/Describe.ashx?c=genres";
+        }
+      }
+    }
+
     /// <summary>
     /// Gets the presets URL.
     /// </summary>
@@ -137,6 +131,10 @@ namespace RadioTimeOpmlApi
       if (!string.IsNullOrEmpty(PartnerId))
       {
         s += "&partnerID=" + PartnerId;
+      }
+      if (!string.IsNullOrEmpty(Language))
+      {
+        s += "&locale=" + Language;
       }
       return s;
     }
