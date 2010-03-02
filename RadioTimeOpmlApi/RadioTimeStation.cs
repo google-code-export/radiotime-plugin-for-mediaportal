@@ -27,7 +27,9 @@ namespace RadioTimeOpmlApi
     public string Language { get; set; }
     public string Location { get; set; }
     public string Frequency { get; set; }
-    
+    public string Slogan { get; set; }
+    public string Adresss { get; set; }
+
     public void Get(string guideid)
     {
       GuideId = guideid;
@@ -35,6 +37,8 @@ namespace RadioTimeOpmlApi
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {
+        Genres.Clear();
+        Similar.Clear();
         StreamReader reader = new StreamReader(response, Encoding.UTF8, true);
         String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
         response.Close();
@@ -61,6 +65,9 @@ namespace RadioTimeOpmlApi
                       break;
                     case "frequency":
                       Frequency = childNode.InnerText;
+                      break;
+                    case "slogan":
+                      Slogan = childNode.InnerText;
                       break;
                     case "location":
                       Location = childNode.InnerText;
@@ -98,6 +105,8 @@ namespace RadioTimeOpmlApi
         catch
         {
         }
+        Slogan = string.IsNullOrEmpty(Slogan) ? " " : Slogan;
+        Language = string.IsNullOrEmpty(Language) ? " " : Language;
       }
     }
 

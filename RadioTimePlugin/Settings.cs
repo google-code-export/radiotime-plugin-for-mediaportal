@@ -16,6 +16,9 @@ namespace RadioTimePlugin
   public class Settings : RadioTimeSetting
   {
 
+    static public RadioTimeStation NowPlayingStation { get; set; }
+    static public RadioTimeNowPlaying NowPlaying { get; set; }
+    static public string GuideId { get; set; }
     public Dictionary<string, PlayerType> FormatPlayer { get; set; }
     public Dictionary<string, string> FormatNames { get; set; }
  

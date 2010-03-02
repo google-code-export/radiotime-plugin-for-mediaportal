@@ -79,9 +79,6 @@ namespace RadioTimePlugin
 
     #region locale vars
 
-    private RadioTime grabber = new RadioTime();
-    private RadioTimeWebService websrv = new RadioTimeWebService();
-    private Settings _setting = new Settings();
     private Identification iden = new Identification();
     MapSettings mapSettings = new MapSettings();
     private int oldSelection = 0;
@@ -106,6 +103,10 @@ namespace RadioTimePlugin
     protected GUIButtonControl searchArtistButton = null;
     [SkinControlAttribute(8)]
     protected GUIButtonControl genresButton = null;
+    [SkinControlAttribute(9)]
+    protected GUIButtonControl nowPlayingButton = null;
+    [SkinControlAttribute(10)]
+    protected GUIButtonControl randomButton = null;
 
     [SkinControlAttribute(51)]
     protected GUIImage logoImage = null;
@@ -203,6 +204,8 @@ namespace RadioTimePlugin
     public override bool Init()
     {
       _setting.Language = GUILocalizeStrings.GetCultureName(GUILocalizeStrings.CurrentLanguage());
+      Settings.NowPlaying = new RadioTimeNowPlaying();
+      Settings.NowPlayingStation=new RadioTimeStation();
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotime.xml");
     }
@@ -210,16 +213,25 @@ namespace RadioTimePlugin
     protected override void OnPageLoad()
     {
       updateStationLogoTimer.Enabled = true;
-      if (grabber.Body.Count < 1)
+      if (!string.IsNullOrEmpty(Settings.GuideId))
       {
-        if (_setting.ShowPresets)
+        grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", Settings.GuideId,
+                                      grabber.Settings.GetParamString()));
+        Settings.GuideId = string.Empty;
+      }
+      else
+      {
+        if (grabber.Body.Count < 1)
         {
-          grabber.GetData(_setting.PresetsUrl, false, false);
-        }
-        else
-        {
-          Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
-          grabber.GetData(_setting.StartupUrl);
+          if (_setting.ShowPresets)
+          {
+            grabber.GetData(_setting.PresetsUrl, false, false);
+          }
+          else
+          {
+            Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
+            grabber.GetData(_setting.StartupUrl);
+          }
         }
       }
       UpdateList();
@@ -343,6 +355,19 @@ namespace RadioTimePlugin
         DoPresets();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
+      else if (control == nowPlayingButton)
+      {
+        GUIWindowManager.ActivateWindow(25652);
+      }
+      else if (control == randomButton)
+      {
+        GUIControl.FocusControl(GetID, listControl.GetID);
+        RadioTime gr = new RadioTime();
+        gr.Settings = grabber.Settings;
+        gr.GetData(grabber.CurentUrl + "&filter=random");
+        if (gr.Body.Count > 0)
+          DoPlay(gr.Body[0]);
+      }
       base.OnClicked(controlId, control, actionType);
     }
 
@@ -363,22 +388,7 @@ namespace RadioTimePlugin
       UpdateList();
     }
 
-    internal static void SetProperty(string property, string value)
-    {
-      if (property == null)
-        return;
 
-
-      //// If the value is empty always add a space
-      //// otherwise the property will keep 
-      //// displaying it's previous value
-      if (String.IsNullOrEmpty(value))
-        value = " ";
-
-      GUIPropertyManager.SetProperty(property, value);
-    }
-
-    //// override action responses
     //// override action responses
     public override void OnAction(Action action)
     {
@@ -411,7 +421,7 @@ namespace RadioTimePlugin
     public override void Process()
     {
       // update the gui
-      UpdateGui();
+      //UpdateGui();
     }
 
     protected void OnShowSortOptions()
@@ -504,63 +514,7 @@ namespace RadioTimePlugin
       //throw new Exception("The method or operation is not implemented.");
     }
 
-    /// <summary>
-    /// Does the play.
-    /// </summary>
-    /// <param name="item">The item.</param>
-    private void DoPlay(RadioTimeOutline item)
-    {
-      RadioTimeStation station = new RadioTimeStation { Grabber = grabber };
 
-      station.Get(item.GuidId);
-      if(!station.IsAvailable)
-      {
-        Err_message(Translation.StationNotAvaiable);
-        return;
-      }
-      var nowPlaying = new RadioTimeNowPlaying();
-      nowPlaying.Grabber = grabber;
-      nowPlaying.Get(item.GuidId);
-      GUIPropertyManager.SetProperty("#Play.Current.Thumb", GetStationLogoFileName(item));
-      
-      PlayerType playerType = PlayerType.Video;
-      if (_setting.FormatPlayer.ContainsKey(item.Formats))
-        playerType = _setting.FormatPlayer[item.Formats];
-
-      
-      string TargetFile = Path.GetTempFileName();
-      WebClient client = new WebClient();
-      client.DownloadFile(item.Url, TargetFile);
-      IPlayListIO loader = new PlayListM3uIO();
-      PlayList playList = new PlayList();
-      loader.Load(playList, TargetFile);
-      
-      
-      switch (playerType)
-      {
-        case PlayerType.Audio:
-          g_Player.PlayAudioStream(playList[0].FileName);
-          break;
-        case PlayerType.Video:
-          // test if the station have tv group
-          if (item.GenreId == "g260" || item.GenreId == "g83" || item.GenreId == "g374" || item.GenreId == "g2769")
-            g_Player.PlayVideoStream(playList[0].FileName);
-          else
-            g_Player.Play(playList[0].FileName, g_Player.MediaType.Unknown);
-          break;
-        case PlayerType.Unknow:
-          break;
-        default:
-          break;
-      }
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Station", nowPlaying.Name);
-      //GUIPropertyManager.SetProperty("#RadioTime.Play.StationLogo", GetStationLogoFileName(nowPlaying.Image));
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Duration", nowPlaying.Duration.ToString());
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Description", nowPlaying.Description);
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", nowPlaying.Location);
-
-      GUIPropertyManager.SetProperty("#Play.Current.Title", nowPlaying.Name + "/" + nowPlaying.Description + "/" + nowPlaying.Location);
-    }
 
     private void DoSearchArtist()
     {
@@ -670,12 +624,22 @@ namespace RadioTimePlugin
       }
       updateStationLogoTimer.Enabled = true;
       listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
+
+      GUIPropertyManager.SetProperty("#itemcount", listControl.Count.ToString());
+      GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
+
+      if (grabber.CurentUrl.Contains("id="))
+        randomButton.Disabled = false;
+      else
+        randomButton.Disabled = true;
+      
       ShowPanel();
     }
 
     void item_OnItemSelected(GUIListItem item, GUIControl parent)
     {
       listControl.FilmstripView.InfoImageFileName = item.ThumbnailImage;
+      UpdateGui();
     }
 
     void ShowPanel()
@@ -759,17 +723,7 @@ namespace RadioTimePlugin
     }
 
 
-    public void Err_message(string langid)
-    {
-      GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-      if (dlgOK != null)
-      {
-        dlgOK.SetHeading(Translation.Message);
-        dlgOK.SetLine(1, langid);
-        dlgOK.SetLine(2, "");
-        dlgOK.DoModal(GetID);
-      }
-    }
+
     /// <summary>
     /// Removes the favorites.
     /// </summary>
@@ -815,6 +769,8 @@ namespace RadioTimePlugin
           logoImage.SetFileName(DownloadStationLogo(radioItem));
           GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", radioItem.CurrentTrack);
           GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", radioItem.Subtext);
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", (radioItem.ReliabilityIdAsInt/10).ToString());
+
           if (_setting.FormatNames.ContainsKey(radioItem.Formats))
             GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", _setting.FormatNames[radioItem.Formats]);
           else
@@ -869,23 +825,8 @@ namespace RadioTimePlugin
 
     #region download manager
 
-    private string GetStationLogoFileName(RadioTimeOutline radioItem)
-    {
-      if (string.IsNullOrEmpty(radioItem.Image))
-        return string.Empty;
-      else
-        return Utils.GetCoverArtName(Thumbs.Radio, radioItem.Text);
-    }
 
-    private string DownloadStationLogo(RadioTimeOutline radioItem )
-    {
-      string localFile = GetStationLogoFileName(radioItem);
-      if (!File.Exists(localFile) && !string.IsNullOrEmpty(radioItem.Image))
-      {
-        downloaQueue.Enqueue(new DownloadFileObject(localFile, radioItem.Image.Replace("q.png",".png")));
-      }
-      return localFile;
-    }
+
 
 
     private void DownloadLogoEnd(object sender, AsyncCompletedEventArgs e)
