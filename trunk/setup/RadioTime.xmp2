@@ -75,6 +75,13 @@
               <ZipFileName>Installer{CopyFile}\{968772ef-5a85-406a-a0fc-8e63ea4708fa}-RadioTimeMiniGuide.xml</ZipFileName>
               <DestinationFilename>%Skin%\Blue3wide\RadioTimeMiniGuide.xml</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\radiotimenowplaying.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e8708f2c-f712-4283-953a-d7fbb698d6ba}-radiotimenowplaying.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Blue3wide\radiotimenowplaying.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -111,6 +118,13 @@
               <LocalFileName>skin\Blue3wide\RadioTimeMiniGuide.xml</LocalFileName>
               <ZipFileName>Installer{GenericSkinFile}\{5f3e5918-6dd0-4048-bc97-7bbc06f1859c}-RadioTimeMiniGuide.xml</ZipFileName>
               <DestinationFilename>%Skin%\[DEFAULT]\RadioTimeMiniGuide.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="GenericSkinFile" SystemFile="false" Modified="false">
+              <Param1>Blue3wide</Param1>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>skin\Blue3wide\radiotimenowplaying.xml</LocalFileName>
+              <ZipFileName>Installer{GenericSkinFile}\{2fcc8659-d68d-44b9-b3fc-632ed40e6eaa}-radiotimenowplaying.xml</ZipFileName>
+              <DestinationFilename>%Skin%\[DEFAULT]\radiotimenowplaying.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -230,12 +244,15 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>0</Major>
       <Minor>5</Minor>
       <Build>3</Build>
-      <Revision>2</Revision>
+      <Revision>3</Revision>
     </Version>
-    <ExtensionDescription>Plugin for browse online radio stations from RadioTime.com</ExtensionDescription>
-    <VersionDescription>Radio guide  </VersionDescription>
+    <ExtensionDescription>Plugin for browse more that 100.000 online radio stations from RadioTime.com</ExtensionDescription>
+    <VersionDescription>Fixed playback of .pls files
+Now playing screen
+Random Play button
+</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.2.mpe1</OnlineLocation>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.3.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
@@ -323,6 +340,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <LocalFileName>skin\Blue3wide\RadioTimeMiniGuide.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{968772ef-5a85-406a-a0fc-8e63ea4708fa}-RadioTimeMiniGuide.xml</ZipFileName>
         <DestinationFilename>%Skin%\Blue3wide\RadioTimeMiniGuide.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>skin\Blue3wide\radiotimenowplaying.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e8708f2c-f712-4283-953a-d7fbb698d6ba}-radiotimenowplaying.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Blue3wide\radiotimenowplaying.xml</DestinationFilename>
       </FileItem>
     </Items>
   </UniqueFileList>

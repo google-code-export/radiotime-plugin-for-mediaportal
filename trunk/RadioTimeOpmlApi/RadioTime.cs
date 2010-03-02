@@ -22,16 +22,11 @@ namespace RadioTimeOpmlApi
     }
 
 
-    private String _curentUrl;
     /// <summary>
     /// Gets or sets the curent URL.
     /// </summary>
     /// <value>The curent URL.</value>
-    public String CurentUrl
-    {
-      get { return _curentUrl; }
-      set { _curentUrl = value; }
-    }
+    public String CurentUrl { get; set; }
 
     private RadioTime _parent;
 

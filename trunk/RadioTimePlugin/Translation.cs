@@ -207,7 +207,7 @@ namespace RadioTimePlugin
 
 
     // E
- 
+    public static string PlayError = "Error in  playback {0}";
 
     // F
  
@@ -226,7 +226,8 @@ namespace RadioTimePlugin
     public static string Message = "Message";
 
     // N
-    
+    public static string NowPlaying = "Now Playing";
+
     // O
 
     // P
@@ -234,6 +235,7 @@ namespace RadioTimePlugin
 
     // R
     public static string RemoveFromFavorites = "Remove from favorites";
+    public static string Random = "Random Play";
 
     // S
     public static string Search = "Search";
@@ -242,7 +244,8 @@ namespace RadioTimePlugin
     public static string SortByName = "Sort by name";
     public static string Sorting = "Sorting";
     public static string ShowGiuide = "Show guide";
-    public static string StationNotAvaiable = "The station isn't avaiable";    
+    public static string StationNotAvaiable = "The station isn't avaiable";
+    public static string SimilarStations = "Similar stations";    
 
     // T
 

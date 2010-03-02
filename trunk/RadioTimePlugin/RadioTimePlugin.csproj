@@ -56,6 +56,7 @@
     <Compile Include="BaseGui.cs" />
     <Compile Include="DownloadFileObject.cs" />
     <Compile Include="MiniGuide.cs" />
+    <Compile Include="NowPlayingGUI.cs" />
     <Compile Include="RadioTimePluginGUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />

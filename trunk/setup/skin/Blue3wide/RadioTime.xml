@@ -59,7 +59,7 @@
           <id>7</id>
           <label>#RadioTime.Translation.SearchArtist.Label</label>
           <onright>50</onright>
-          <onup>5</onup>
+          <onup>10</onup>
           <ondown>2</ondown>
         </control>
 
@@ -111,8 +111,29 @@
           <label>#RadioTime.Translation.Presets.Label</label>
           <onright>50</onright>
           <onup>2</onup>
+          <ondown>9</ondown>
+        </control>
+
+        <control>
+          <description>Now playing</description>
+          <type>button</type>
+          <id>9</id>
+          <label>#RadioTime.Translation.NowPlaying.Label</label>
+          <onright>50</onright>
+          <onup>6</onup>
+          <ondown>10</ondown>
+        </control>
+        
+		<control>
+          <description>Random</description>
+          <type>button</type>
+          <id>10</id>
+          <label>#RadioTime.Translation.Random.Label</label>
+          <onright>50</onright>
+          <onup>9</onup>
           <ondown>99</ondown>
         </control>
+		
       </control>
 
      </control>
@@ -165,6 +186,29 @@
       <textcolor>ffffffff</textcolor>
       <visible>facadeview.list</visible>      
     </control>
+	
+	    <control>
+            <id>81</id>
+            <description>existent rating2</description>
+            <type>imagelist</type>
+            <visible>no</visible>
+            <posX>25</posX>
+            <posY>460</posY>
+            <width>142</width>
+            <height>40</height>
+            <textureHeight>20</textureHeight>
+            <textureWidth>28</textureWidth>
+            <percentage>#RadioTime.Selected.Reliability</percentage>
+            <imagesToDraw>5</imagesToDraw>
+            <orientation>HORIZONTAL</orientation>
+            <align>LEFT</align>
+            <subitems>
+                <subitem>greystar.png</subitem>
+                <subitem>stargood.png</subitem>
+            </subitems>
+			<visible>facadeview.list</visible>
+        </control>
+		
     <import>common.facade.music.xml</import>
     
   </controls>

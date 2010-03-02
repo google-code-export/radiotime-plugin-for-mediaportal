@@ -77,6 +77,7 @@ namespace RadioTimeOpmlApi
 
       Remain = node.Attributes["seconds_remaining"] != null ? node.Attributes["seconds_remaining"].Value : string.Empty;
 
+      Reliability = node.Attributes["reliability"] != null ? node.Attributes["reliability"].Value : string.Empty;
       //Now_playing_id = Type == OutlineType.audio ? node.Attributes["now_playing_id"].Value : string.Empty;
 
 
@@ -94,6 +95,7 @@ namespace RadioTimeOpmlApi
     public string Formats { get; set; }
     public string Duration { get; set; }
     public string Remain { get; set; }
+    public string Reliability { get; set; }
     public string Start { get; set; }
     public string StationId { get; set; }
     public string GuidId { get; set; }
@@ -110,6 +112,16 @@ namespace RadioTimeOpmlApi
       {
         int i = 0;
         int.TryParse(StationId, out i);
+        return i;
+      }
+    }
+
+    public int ReliabilityIdAsInt
+    {
+      get
+      {
+        int i = 0;
+        int.TryParse(Reliability, out i);
         return i;
       }
     }
