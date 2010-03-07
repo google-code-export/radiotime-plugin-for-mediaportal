@@ -41,7 +41,7 @@ namespace RadioTimePlugin
 
       Log.Info("Using language " + lang);
 
-      _path = Config.GetSubFolder(Config.Dir.Language, "MyAlarm");
+      _path = Config.GetSubFolder(Config.Dir.Language, "RadioTime");
 
       if (!System.IO.Directory.Exists(_path))
         System.IO.Directory.CreateDirectory(_path);

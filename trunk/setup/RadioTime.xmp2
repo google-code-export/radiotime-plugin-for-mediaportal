@@ -129,6 +129,22 @@
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="Languages">
+        <DisplayName>Languages</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Languages</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>language\RadioTime\en-US.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{79f57d06-4c75-4235-b329-817999ce5b2b}-en-US.xml</ZipFileName>
+              <DestinationFilename>%Language%\RadioTime\en-US.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -244,15 +260,12 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>0</Major>
       <Minor>5</Minor>
       <Build>3</Build>
-      <Revision>3</Revision>
+      <Revision>4</Revision>
     </Version>
     <ExtensionDescription>Plugin for browse more that 100.000 online radio stations from RadioTime.com</ExtensionDescription>
-    <VersionDescription>Fixed playback of .pls files
-Now playing screen
-Random Play button
-</VersionDescription>
+    <VersionDescription>Language support</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.3.mpe1</OnlineLocation>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.5.3.4.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
@@ -348,6 +361,13 @@ Random Play button
         <ZipFileName>Installer{CopyFile}\{e8708f2c-f712-4283-953a-d7fbb698d6ba}-radiotimenowplaying.xml</ZipFileName>
         <DestinationFilename>%Skin%\Blue3wide\radiotimenowplaying.xml</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>language\RadioTime\en-US.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{79f57d06-4c75-4235-b329-817999ce5b2b}-en-US.xml</ZipFileName>
+        <DestinationFilename>%Language%\RadioTime\en-US.xml</DestinationFilename>
+      </FileItem>
     </Items>
   </UniqueFileList>
   <ProjectSettings>
@@ -370,6 +390,16 @@ Random Play button
         <DestinationFilename>%Skin%\[DEFAULT]\</DestinationFilename>
         <Folder>skin\Blue3wide</Folder>
         <Group>DefaultSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{31bbaa06-8fac-4004-b09c-6c44c9b11f82}-</ZipFileName>
+        <DestinationFilename>%Language%\</DestinationFilename>
+        <Folder>language</Folder>
+        <Group>Languages</Group>
         <Recursive>true</Recursive>
       </FolderGroup>
     </FolderGroups>

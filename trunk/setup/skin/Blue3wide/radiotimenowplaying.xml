@@ -4,6 +4,7 @@
     <defaultcontrol>155</defaultcontrol>
     <allowoverlay>no</allowoverlay>
 	<define>#header.image:radiotime_logo.png</define>
+	
     <controls>
         <import>common.window.xml</import>
         <control>
