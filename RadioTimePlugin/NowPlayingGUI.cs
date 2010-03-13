@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MediaPortal.GUI.Library;
+using MediaPortal.Player;
 using RadioTimeOpmlApi;
 
 namespace RadioTimePlugin
@@ -33,8 +34,16 @@ namespace RadioTimePlugin
 
     public override bool Init()
     {
+      BassMusicPlayer.Player.InternetStreamSongChanged += Player_InternetStreamSongChanged;
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotimenowplaying.xml");
+    }
+
+    void Player_InternetStreamSongChanged(object sender)
+    {
+      //Log.Error("Stream changed ");
+      //Log.Error(GUIPropertyManager.GetProperty("#Play.Current.Artist"));
+      //throw new NotImplementedException();
     }
 
     protected override void OnPageLoad()

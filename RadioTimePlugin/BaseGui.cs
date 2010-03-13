@@ -123,8 +123,8 @@ namespace RadioTimePlugin
         GUIPropertyManager.SetProperty("#RadioTime.Play.Slogan", station.Slogan);
         GUIPropertyManager.SetProperty("#RadioTime.Play.Language", station.Slogan);
 
-        GUIPropertyManager.SetProperty("#Play.Current.Title",
-                                       nowPlaying.Name + "/" + nowPlaying.Description + "/" + nowPlaying.Location);
+        //GUIPropertyManager.SetProperty("#Play.Current.Title",
+                                       //nowPlaying.Name + "/" + nowPlaying.Description + "/" + nowPlaying.Location);
 
         if (_setting.FormatNames.ContainsKey(item.Formats))
           GUIPropertyManager.SetProperty("#RadioTime.Play.Format", _setting.FormatNames[item.Formats]);

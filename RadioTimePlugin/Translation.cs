@@ -226,6 +226,7 @@ namespace RadioTimePlugin
     public static string Message = "Message";
 
     // N
+    public static string NewSearch = "New Search";
     public static string NowPlaying = "Now Playing";
 
     // O
@@ -239,6 +240,7 @@ namespace RadioTimePlugin
 
     // S
     public static string Search = "Search";
+    public static string SearchHistory = "Search History";
     public static string SearchArtist = "Search Artist";
     public static string SortByBitrate = "Sort by bitrate";
     public static string SortByName = "Sort by name";

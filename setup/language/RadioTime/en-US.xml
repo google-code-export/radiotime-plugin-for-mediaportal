@@ -33,6 +33,7 @@
     <string Field="Message">Message</string>
 
     <!-- N  -->
+	<string Field="NewSearch">New Search</string>
     <string Field="NowPlaying">Now Playing</string>
 
     <!-- O  -->
@@ -46,6 +47,7 @@
 
     <!-- S  -->
     <string Field="Search">Search</string>
+	<string Field="SearchHistory">Search History</string>
     <string Field="SearchArtist">Search Artist</string>
     <string Field="SortByBitrate">Sort by bitrate</string>
     <string Field="SortByName">Sort by name</string>

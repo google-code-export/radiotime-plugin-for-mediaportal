@@ -21,6 +21,8 @@ namespace RadioTimePlugin
     static public string GuideId { get; set; }
     public Dictionary<string, PlayerType> FormatPlayer { get; set; }
     public Dictionary<string, string> FormatNames { get; set; }
+    public List<string> SearchHistory { get; set; }
+    public List<string> ArtistSearchHistory { get; set; }
  
     private string _password;
     public string Password
@@ -65,6 +67,9 @@ namespace RadioTimePlugin
       FormatNames.Add("wmvideo", "Windows Media Video v8/9/10");
       FormatNames.Add("ogg", "Ogg Vorbis");
       FormatNames.Add("qt", "Quicktime");
+
+      SearchHistory = new List<string>();
+      ArtistSearchHistory = new List<string>();
     }
 
     private string pluginName;
@@ -105,12 +110,29 @@ namespace RadioTimePlugin
         xmlwriter.SetValue("radiotime", "password", Password);
         xmlwriter.SetValueAsBool("radiotime", "showpresets", ShowPresets);
         xmlwriter.SetValue("radiotime", "pluginname", PluginName);
+
+        string s = "";
+        foreach (string history in SearchHistory)
+        {
+          s += history + "|";
+        }
+        xmlwriter.SetValue("radiotime", "searchHistory", PluginName);
+
+        s = "";
+        foreach (string history in ArtistSearchHistory)
+        {
+          s += history + "|";
+        }
+        xmlwriter.SetValue("radiotime", "artistSearchHistory", PluginName);
+
       }
     }
 
     public void Load()
     {
-      using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+      using (
+        MediaPortal.Profile.Settings xmlreader =
+          new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
       {
         Mp3 = xmlreader.GetValueAsBool("radiotime", "mp3", true);
         Wma = xmlreader.GetValueAsBool("radiotime", "wma", true);
@@ -120,6 +142,30 @@ namespace RadioTimePlugin
         User = xmlreader.GetValueAsString("radiotime", "user", string.Empty);
         Password = xmlreader.GetValueAsString("radiotime", "password", string.Empty);
         PluginName = xmlreader.GetValueAsString("radiotime", "pluginname", "RadioTime");
+
+        SearchHistory.Clear();
+        ArtistSearchHistory.Clear();
+        string searchs = xmlreader.GetValueAsString("radiotime", "searchHistory", "");
+        if (!string.IsNullOrEmpty(searchs))
+        {
+          string[] array = searchs.Split('|');
+          for (int i = 0; i < array.Length && i < 25; i++)
+          {
+            SearchHistory.Add(array[i]);
+          }
+        }
+
+        searchs = xmlreader.GetValueAsString("radiotime", "artistSearchHistory", "");
+        if (!string.IsNullOrEmpty(searchs))
+        {
+
+          string[] array = searchs.Split('|');
+          for (int i = 0; i < array.Length && i < 25; i++)
+          {
+            ArtistSearchHistory.Add(array[i]);
+          }
+
+        }
         PartnerId = "41";
       }
     }

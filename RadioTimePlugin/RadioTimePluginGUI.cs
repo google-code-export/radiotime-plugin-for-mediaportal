@@ -298,18 +298,11 @@ namespace RadioTimePlugin
             mapSettings.ViewAs = (int)View.BigIcons;
             break;
           case View.BigIcons:
-            mapSettings.ViewAs = (int)View.Albums;
-            break;
-          case View.Albums:
-            mapSettings.ViewAs = (int)View.Filmstrip;
-            break;
-
-          case View.Filmstrip:
             mapSettings.ViewAs = (int)View.List;
             break;
         }
         ShowPanel();
-        GUIControl.FocusControl(GetID, listControl.GetID);
+       // GUIControl.FocusControl(GetID, listControl.GetID);
       }
       else if (control == listControl)
       {
@@ -383,7 +376,7 @@ namespace RadioTimePlugin
     private void DoGenres()
     {
       Log.Debug("RadioTime page loading :{0}", _setting.GenresUrl);
-      grabber.Reset();
+      //grabber.Reset();
       grabber.GetData(_setting.GenresUrl);
       UpdateList();
     }
@@ -520,6 +513,22 @@ namespace RadioTimePlugin
     {
       string searchString = "";
 
+      GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+      if (dlg == null) return;
+      dlg.Reset();
+      dlg.SetHeading(Translation.SearchHistory);
+      dlg.Add(string.Format("<{0}>", Translation.NewSearch));
+      for (int i = _setting.SearchHistory.Count; i > 0; i--)
+      {
+        dlg.Add(_setting.SearchHistory[i - 1]);
+      }
+      dlg.DoModal(GetID);
+      if (dlg.SelectedId == -1)
+        return;
+      searchString = dlg.SelectedLabelText;
+      if (searchString == string.Format("<{0}>", Translation.NewSearch))
+        searchString = "";
+
       // display an virtual keyboard
       var keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_KEYBOARD);
       if (null == keyboard) return;
@@ -536,12 +545,33 @@ namespace RadioTimePlugin
       {
         grabber.SearchArtist(searchString);
         UpdateList();
+        if (_setting.ArtistSearchHistory.Contains(searchString.Trim()))
+          _setting.ArtistSearchHistory.Remove(searchString.Trim());
+        _setting.ArtistSearchHistory.Add(searchString.Trim());
       }
     }
 
     private void DoSearch()
     {
       string searchString = "";
+
+      GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+      if (dlg == null) return;
+      dlg.Reset();
+      dlg.SetHeading(Translation.SearchHistory);
+      dlg.Add(string.Format("<{0}>", Translation.NewSearch));
+      for (int i = _setting.SearchHistory.Count; i > 0; i--)
+      {
+        dlg.Add(_setting.SearchHistory[i - 1]);
+      }
+      dlg.DoModal(GetID);
+      if (dlg.SelectedId == -1)
+        return;
+      
+      searchString = dlg.SelectedLabelText;
+      if (searchString == string.Format("<{0}>", Translation.NewSearch))
+        searchString = "";
+
 
       // display an virtual keyboard
       VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
@@ -559,6 +589,9 @@ namespace RadioTimePlugin
       {
         grabber.Search(searchString);
         UpdateList();
+        if (_setting.SearchHistory.Contains(searchString.Trim()))
+          _setting.SearchHistory.Remove(searchString.Trim());
+        _setting.SearchHistory.Add(searchString.Trim());
       }
     }
     
@@ -588,6 +621,7 @@ namespace RadioTimePlugin
         item.Label2 = "(" + grabber.Parent.Body.Count.ToString() + ")";
         item.IsFolder = true;
         item.IconImage = "defaultFolderBack.png";
+        item.IconImageBig = "DefaultFolderBackBig.png";
         //item.MusicTag = head;
         listControl.Add(item);
       }
@@ -608,15 +642,26 @@ namespace RadioTimePlugin
         {
           case RadioTimeOutline.OutlineType.audio:
             if (string.IsNullOrEmpty(item.IconImage))
+            {
               item.IconImage = "DefaultMyradio.png";
+              item.IconImageBig = "DefaultMyradio.png";
+            }
             item.IsFolder = false;
             break;
           case RadioTimeOutline.OutlineType.link:
             if (string.IsNullOrEmpty(item.IconImage))
-              item.IconImage = "defaultFolderNF.png";
+            {
+              item.IconImage = "DefaultMyradioStream.png";
+              item.IconImageBig = "DefaultMyradioStreamBig.png";
+            }
             item.IsFolder = true;
             break;
           case RadioTimeOutline.OutlineType.unknow:
+            {
+              item.IconImage = "DefaultMyradioStream.png";
+              item.IconImageBig = "DefaultMyradioStreamBig.png";
+              item.IsFolder = true;            
+            }
             break;
           default:
             break;
@@ -625,7 +670,7 @@ namespace RadioTimePlugin
       updateStationLogoTimer.Enabled = true;
       listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
 
-      GUIPropertyManager.SetProperty("#itemcount", listControl.Count.ToString());
+      GUIPropertyManager.SetProperty("#itemcount", "Items: " + listControl.Count.ToString());
       GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
 
       if (grabber.CurentUrl.Contains("id="))
