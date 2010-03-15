@@ -116,14 +116,14 @@ namespace RadioTimePlugin
         {
           s += history + "|";
         }
-        xmlwriter.SetValue("radiotime", "searchHistory", PluginName);
+        xmlwriter.SetValue("radiotime", "searchHistory", s);
 
         s = "";
         foreach (string history in ArtistSearchHistory)
         {
           s += history + "|";
         }
-        xmlwriter.SetValue("radiotime", "artistSearchHistory", PluginName);
+        xmlwriter.SetValue("radiotime", "artistSearchHistory", s);
 
       }
     }
@@ -151,7 +151,8 @@ namespace RadioTimePlugin
           string[] array = searchs.Split('|');
           for (int i = 0; i < array.Length && i < 25; i++)
           {
-            SearchHistory.Add(array[i]);
+            if (!string.IsNullOrEmpty(array[i]))
+              SearchHistory.Add(array[i]);
           }
         }
 
@@ -162,7 +163,8 @@ namespace RadioTimePlugin
           string[] array = searchs.Split('|');
           for (int i = 0; i < array.Length && i < 25; i++)
           {
-            ArtistSearchHistory.Add(array[i]);
+            if (!string.IsNullOrEmpty(array[i]))
+              ArtistSearchHistory.Add(array[i]);
           }
 
         }

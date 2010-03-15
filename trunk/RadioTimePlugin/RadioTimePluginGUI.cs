@@ -518,9 +518,9 @@ namespace RadioTimePlugin
       dlg.Reset();
       dlg.SetHeading(Translation.SearchHistory);
       dlg.Add(string.Format("<{0}>", Translation.NewSearch));
-      for (int i = _setting.SearchHistory.Count; i > 0; i--)
+      for (int i = _setting.ArtistSearchHistory.Count; i > 0; i--)
       {
-        dlg.Add(_setting.SearchHistory[i - 1]);
+        dlg.Add(_setting.ArtistSearchHistory[i - 1]);
       }
       dlg.DoModal(GetID);
       if (dlg.SelectedId == -1)
@@ -548,6 +548,7 @@ namespace RadioTimePlugin
         if (_setting.ArtistSearchHistory.Contains(searchString.Trim()))
           _setting.ArtistSearchHistory.Remove(searchString.Trim());
         _setting.ArtistSearchHistory.Add(searchString.Trim());
+        _setting.Save();
       }
     }
 
@@ -592,6 +593,7 @@ namespace RadioTimePlugin
         if (_setting.SearchHistory.Contains(searchString.Trim()))
           _setting.SearchHistory.Remove(searchString.Trim());
         _setting.SearchHistory.Add(searchString.Trim());
+        _setting.Save();
       }
     }
     

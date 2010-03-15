@@ -67,6 +67,7 @@ namespace RadioTimePlugin
       station.Get(item.GuidId);
       if (!station.IsAvailable)
       {
+        GUIWaitCursor.Hide();
         Err_message(Translation.StationNotAvaiable);
         return;
       }
@@ -90,11 +91,23 @@ namespace RadioTimePlugin
 
         if (playList[0].FileName.ToLower().Contains(".pls"))
         {
-          string s = Path.GetTempFileName();
-          client.DownloadFile(playList[0].FileName, s);
-          IPlayListIO loader1 = new PlayListPLSIO();
-          loader1.Load(playList, s);
-          File.Delete(s);
+          //string s = Path.GetTempFileName();
+          //client.DownloadFile(playList[0].FileName, s);
+          IPlayListIO loader1 = new PlayListPLSEIO();
+          loader1.Load(playList, playList[0].FileName);
+          //File.Delete(s);
+        }
+
+        if (playList[0].FileName.ToLower().Contains(".m3u"))
+        {
+          IPlayListIO loader1 = new PlayListM3uIO();
+          string files = playList[0].FileName;
+          loader1.Load(playList, playList[0].FileName);
+          if (playList.Count == 0)
+          {
+            IPlayListIO loader2 = new PlayListPLSEIO();
+            loader2.Load(playList, files);
+          }
         }
 
         switch (playerType)
