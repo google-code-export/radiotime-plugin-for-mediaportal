@@ -2,7 +2,7 @@
 <!-- RadioTime translation file -->
 <!-- Danish (da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Contributed by steffansp 9. marts 2010 -->
+<!-- Contributed by steffansp 13. marts 2010 -->
 <strings>
 
      <!-- A  -->
@@ -34,6 +34,7 @@
     <string Field="Message">Besked</string>
 
     <!-- N  -->
+	<string Field="NewSearch">Ny søgning</string>
     <string Field="NowPlaying">Spiller nu</string>
 
     <!-- O  -->
@@ -47,6 +48,7 @@
 
     <!-- S  -->
     <string Field="Search">Søg</string>
+	<string Field="SearchHistory">Søge historik</string>
     <string Field="SearchArtist">Søg kunstner</string>
     <string Field="SortByBitrate">Sorter efter bitrate</string>
     <string Field="SortByName">Sort efter navn</string>
