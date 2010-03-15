@@ -16,9 +16,6 @@ namespace RadioTimePlugin
       InitializeComponent();
       this.linkLabel1.Links.Add(0, linkLabel1.Text.Length, "http://www.radiotime.com");
       _setting.Load();
-      checkBox1.Checked = _setting.Mp3;
-      checkBox2.Checked = _setting.Wma;
-      checkBox3.Checked = _setting.Real;
       checkBox4.Checked = _setting.ShowPresets;
       textBox_user.Text = _setting.User;
       textBox_passwd.Text = _setting.Password;
@@ -29,9 +26,6 @@ namespace RadioTimePlugin
 
     private void button1_Click(object sender, EventArgs e)
     {
-      _setting.Mp3 = checkBox1.Checked;
-      _setting.Wma = checkBox2.Checked;
-      _setting.Real = checkBox3.Checked;
       _setting.ShowPresets = checkBox4.Checked;
       _setting.User = textBox_user.Text;
       _setting.Password = textBox_passwd.Text;
@@ -48,7 +42,12 @@ namespace RadioTimePlugin
 
     private void SetupForm_Load(object sender, EventArgs e)
     {
+      
+    }
 
+    private void pictureBox1_Click(object sender, EventArgs e)
+    {
+      System.Diagnostics.Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PTPNJYH7FMZWL");
     }
   }
 }
