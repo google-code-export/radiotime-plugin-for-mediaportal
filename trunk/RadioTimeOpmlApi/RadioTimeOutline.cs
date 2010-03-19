@@ -6,7 +6,7 @@ using RadioTimeOpmlApi.com.radiotime.services;
 
 namespace RadioTimeOpmlApi
 {
-  public class RadioTimeOutline
+  public class RadioTimeOutline: ICloneable
   {
     public enum OutlineType
     {
@@ -14,6 +14,16 @@ namespace RadioTimeOpmlApi
       link,
       unknow
     };
+
+    object ICloneable.Clone()
+    {
+      return this.Clone();
+    }
+    
+    public RadioTimeOutline Clone()
+    {
+      return (RadioTimeOutline)this.MemberwiseClone();
+    }
 
     public RadioTimeOutline()
     {

@@ -4,12 +4,25 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Xml;
+using MediaPortal.GUI.Library;
 
 
 namespace RadioTimeOpmlApi
 {
-  public class RadioTimeStation
+  public class RadioTimeStation: ICloneable
   {
+    object ICloneable.Clone()
+    {
+      return this.Clone();
+    }
+
+    public RadioTimeStation Clone()
+    {
+      RadioTimeStation returnStation = (RadioTimeStation)this.MemberwiseClone();
+      return returnStation;
+    }
+
+    
     public RadioTimeStation()
     {
       Genres = new List<RadioTimeOutline>();
@@ -34,6 +47,9 @@ namespace RadioTimeOpmlApi
     {
       GuideId = guideid;
       string sUrl = string.Format("http://opml.radiotime.com/Describe.ashx?id={0}&detail=genre,recommendation&{1}", GuideId, Grabber.Settings.GetParamString());
+      
+      //Log.Debug("Get Station " + sUrl);
+
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {

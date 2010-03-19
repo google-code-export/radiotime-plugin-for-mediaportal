@@ -4,13 +4,13 @@ using System.Net;
 using System.Collections.Generic;
 using System.Xml;
 using System.Text;
+using MediaPortal.GUI.Library;
 
 namespace RadioTimeOpmlApi
 {
   public class RadioTime
   {
     private bool _cacheIsUsed;
-
     /// <summary>
     /// Gets or sets a value indicating whether [cache is used].
     /// </summary>
@@ -21,7 +21,6 @@ namespace RadioTimeOpmlApi
       set { _cacheIsUsed = value; }
     }
 
-
     /// <summary>
     /// Gets or sets the curent URL.
     /// </summary>
@@ -29,7 +28,6 @@ namespace RadioTimeOpmlApi
     public String CurentUrl { get; set; }
 
     private RadioTime _parent;
-
     /// <summary>
     /// Gets or sets the parent.
     /// </summary>
@@ -39,7 +37,6 @@ namespace RadioTimeOpmlApi
       get { return _parent; }
       set { _parent = value; }
     }
-
 
     private string _parentUrl;
     /// <summary>
@@ -64,7 +61,6 @@ namespace RadioTimeOpmlApi
       set { _head = value; }
     }
 
-
     private List<RadioTimeOutline> _body;
     /// <summary>
     /// Gets or sets the body elements.
@@ -88,7 +84,6 @@ namespace RadioTimeOpmlApi
     }
 
     private Dictionary<string,RadioTime> _cache;
-
     /// <summary>
     /// Gets or sets the cache.
     /// </summary>
@@ -97,6 +92,17 @@ namespace RadioTimeOpmlApi
     {
       get { return _cache; }
       set { _cache = value; }
+    }
+
+    private string _navigationTitle;
+    /// <summary>
+    /// Gets or sets the parent URL.
+    /// </summary>
+    /// <value>The parent URL.</value>
+    public string NavigationTitle
+    {
+        get { return _navigationTitle; }
+        set { _navigationTitle = value; }
     }
 
     /// <summary>
@@ -112,6 +118,10 @@ namespace RadioTimeOpmlApi
      client.DownloadString(url);
     }
 
+    /// <summary>
+    /// Removes the preset.
+    /// </summary>
+    /// <param name="id">The preset id.</param>
     public void RemovePreset(string id)
     {
       WebClient client = new WebClient();
@@ -120,6 +130,7 @@ namespace RadioTimeOpmlApi
         Settings.PartnerId, Settings.User, Settings.Password);
       client.DownloadString(url);
     }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="RadioTime"/> class.
     /// </summary>
@@ -132,17 +143,19 @@ namespace RadioTimeOpmlApi
       Settings = new RadioTimeSetting();
       Cache = new Dictionary<string, RadioTime>();
       Parent = null;
+      NavigationTitle = "";
     }
     
     public RadioTime(RadioTime parent)
     {
-      this.Head =new RadioTimeHead(parent.Head);
+      this.Head = new RadioTimeHead(parent.Head);
       this.Body = new List<RadioTimeOutline>(parent.Body);
       this.Settings = new RadioTimeSetting(parent.Settings);
       this.ParentUrl = parent.ParentUrl;
       this.CurentUrl = parent.CurentUrl;
       this.Parent = parent.Parent;
       this.Cache = parent.Cache;
+      this.NavigationTitle = parent.NavigationTitle;
     }
 
     /// <summary>
@@ -158,6 +171,7 @@ namespace RadioTimeOpmlApi
         this.ParentUrl = Parent.ParentUrl;
         this.CurentUrl = Parent.CurentUrl;
         this.Parent = Parent.Parent;
+        this.NavigationTitle = Parent.NavigationTitle;
       }
     }
 
@@ -171,7 +185,9 @@ namespace RadioTimeOpmlApi
       Body.Clear();
       ParentUrl = string.Empty;
       CurentUrl = string.Empty;
+      this.NavigationTitle = "";
     }
+
     /// <summary>
     /// Clears the cache.
     /// </summary>
@@ -181,20 +197,45 @@ namespace RadioTimeOpmlApi
     }
 
     /// <summary>
-    /// Searches the specified search string.
+    /// Searches by the specified search string.
     /// </summary>
     /// <param name="sStr">The search string.</param>
     public void Search(string sStr)
     {
-      string s = string.Format("http://opml.radiotime.com/Search.aspx?query={0}&{1}", sStr, Settings.GetParamString());
-      GetData(s);
+      Search(sStr, string.Empty);
     }
 
+    /// <summary>
+    /// Searches by the specified search string.
+    /// </summary>
+    /// <param name="sStr">The search string.</param>
+    /// <param name="navigationTitle">navigation title.</param>
+    public void Search(string sStr, string navigationTitle)
+    {
+      string s = string.Format("http://opml.radiotime.com/Search.aspx?query={0}&{1}", sStr, Settings.GetParamString());
+      GetData(s, navigationTitle == string.Empty ? sStr : navigationTitle + ": " + sStr);
+    }
+
+    /// <summary>
+    /// Searches the artist by specified search string.
+    /// </summary>
+    /// <param name="sStr">The search string.</param>
     public void SearchArtist(string sStr)
     {
-      string s = string.Format("http://opml.radiotime.com/Search.ashx?c=song,artist&query={0}&{1}", sStr, Settings.GetParamString());
-      GetData(s);
+      SearchArtist(sStr, string.Empty);
     }
+
+    /// <summary>
+    /// Searches the artist by specified search string.
+    /// </summary>
+    /// <param name="sStr">The search string.</param>
+    /// <param name="navigationTitle">navigation title.</param>
+    public void SearchArtist(string sStr, string navigationTitle)
+    {
+      string s = string.Format("http://opml.radiotime.com/Search.ashx?c=song,artist&query={0}&{1}", sStr, Settings.GetParamString());
+      GetData(s, navigationTitle == string.Empty ? sStr : navigationTitle + ": " + sStr);
+    }
+
     /// <summary>
     /// Gets the online data.
     /// </summary>
@@ -203,6 +244,17 @@ namespace RadioTimeOpmlApi
     public bool GetData(string sUrl)
     {
       return GetData(sUrl, true);
+    }
+
+    /// <summary>
+    /// Gets the online data.
+    /// </summary>
+    /// <param name="sUrl">The s URL.</param>
+    /// <param name="navigationTitle">navigation title.</param>
+    /// <returns></returns>
+    public bool GetData(string sUrl, string navigationTitle)
+    {
+      return GetData(sUrl, true, true, navigationTitle);
     }
 
     /// <summary>
@@ -217,14 +269,41 @@ namespace RadioTimeOpmlApi
     }
 
     /// <summary>
+    /// Gets the data.
+    /// </summary>
+    /// <param name="sUrl">The s URL.</param>
+    /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+    /// <param name="navigationTitle">navigation title.</param>
+    /// <returns></returns>
+    public bool GetData(string sUrl, bool useCache, string navigationTitle)
+    {
+      return GetData(sUrl, useCache, true, navigationTitle);
+    }
+
+    /// <summary>
     /// Get and parse the online data.
     /// </summary>
     /// <param name="sUrl">The s URL.</param>
     /// <param name="useCache">if set to <c>true</c> [use cache].</param>
     /// <param name="useNavigationLogic">if set to <c>true</c> [use navigation logic].</param>
     /// <returns></returns>
-    public bool GetData(string sUrl,bool useCache,bool useNavigationLogic)
+    public bool GetData(string sUrl, bool useCache, bool useNavigationLogic)
     {
+      return GetData(sUrl, useCache, useNavigationLogic, string.Empty);
+    }
+
+    /// <summary>
+    /// Get and parse the online data.
+    /// </summary>
+    /// <param name="sUrl">The s URL.</param>
+    /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+    /// <param name="useNavigationLogic">if set to <c>true</c> [use navigation logic].</param>
+    /// <param name="navigationTitle">navigation title.</param>
+    /// <returns></returns>
+    public bool GetData(string sUrl, bool useCache, bool useNavigationLogic, string navigationTitle)
+    {
+      //Log.Debug("GetData " + sUrl);
+
       if (string.IsNullOrEmpty(sUrl))
         return false;
       
@@ -238,6 +317,13 @@ namespace RadioTimeOpmlApi
         CurentUrl = sUrl;
         Head = new RadioTimeHead(Cache[sUrl].Head);
         Body = new List<RadioTimeOutline>(Cache[sUrl].Body);
+
+        if (useNavigationLogic)
+        {
+          string properTitle = Head.Title == string.Empty ? navigationTitle : Head.Title;
+          NavigationTitle = NavigationTitle == string.Empty ? properTitle : NavigationTitle + " / " + properTitle;
+          Parent.NavigationTitle = NavigationTitle;
+        }
         return true;
       }
       else
@@ -248,7 +334,9 @@ namespace RadioTimeOpmlApi
           if (sUrl != CurentUrl)
           {
             if (useNavigationLogic)
+            {
               Parent = new RadioTime(this);
+            }
             ParentUrl = CurentUrl;
             CurentUrl = sUrl;
           }
@@ -266,7 +354,7 @@ namespace RadioTimeOpmlApi
             XmlNode headnodetitle = root.SelectSingleNode("head/title");
             if (headnodetitle != null)
             {
-              Head.Title = headnodetitle.InnerText;
+              Head.Title = headnodetitle.InnerText.Trim();
             }
             else
             {
@@ -300,6 +388,14 @@ namespace RadioTimeOpmlApi
             return false;
           }
           response.Close();
+
+          if (useNavigationLogic)
+          {
+            string properTitle = Head.Title == string.Empty ? navigationTitle : Head.Title;
+            NavigationTitle = NavigationTitle == string.Empty ? properTitle : NavigationTitle + " / " + properTitle;
+            Parent.NavigationTitle = NavigationTitle;
+          }
+          
           return true;
         }
         return true;

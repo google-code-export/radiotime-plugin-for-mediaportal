@@ -19,13 +19,14 @@ namespace RadioTimePlugin
     static public RadioTimeStation NowPlayingStation { get; set; }
     static public RadioTimeNowPlaying NowPlaying { get; set; }
     static public string GuideId { get; set; }
+    static public string GuideIdDescription { get; set; }
     public Dictionary<string, PlayerType> FormatPlayer { get; set; }
     public Dictionary<string, string> FormatNames { get; set; }
     public List<string> SearchHistory { get; set; }
     public List<string> ArtistSearchHistory { get; set; }
  
     private string _password;
-    public string Password
+    public new string Password
     {
       get { return _password; }
       set { _password = value; }
