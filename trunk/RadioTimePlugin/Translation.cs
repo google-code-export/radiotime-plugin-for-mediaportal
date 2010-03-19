@@ -7,7 +7,6 @@ using System.Xml;
 using System.Text.RegularExpressions;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
-using MediaPortal.Localisation;
 
 namespace RadioTimePlugin
 {
@@ -199,7 +198,8 @@ namespace RadioTimePlugin
 
     // A
     public static string AddToFavorites = "Add to favorites";
-    
+    public static string AddToLocalPresets = "Add to local presets";
+
     // C
     public static string ComunicationError = "Comunication error or wrong user name or password";
     
@@ -208,6 +208,7 @@ namespace RadioTimePlugin
 
     // E
     public static string PlayError = "Error in  playback {0}";
+    public static string Empty = "Empty";
 
     // F
  
@@ -227,6 +228,7 @@ namespace RadioTimePlugin
 
     // N
     public static string NewSearch = "New Search";
+    public static string NoSorting = "No sorting";
     public static string NowPlaying = "Now Playing";
     public static string NoStationsOrShowsAvailable = "No stations or shows available";
 

@@ -17,6 +17,7 @@ namespace RadioTimePlugin
     {
       name,
       bitrate,
+      none
     }
 
     public StationSort(SortMethod method, bool asc)
@@ -34,6 +35,7 @@ namespace RadioTimePlugin
       if (item2.IsFolder && item2.Label == "..") return -1;
       if (item1.IsFolder && !item2.IsFolder) return -1;
       else if (!item1.IsFolder && item2.IsFolder) return 1;
+
       switch (currentSortMethod)
       {
         case SortMethod.name:

@@ -24,6 +24,9 @@ namespace RadioTimePlugin
     public Dictionary<string, string> FormatNames { get; set; }
     public List<string> SearchHistory { get; set; }
     public List<string> ArtistSearchHistory { get; set; }
+
+    public List<string> PresetIds { get; set; }
+    public List<RadioTimeStation> PresetStations { get; set; }
  
     private string _password;
     public new string Password
@@ -71,6 +74,9 @@ namespace RadioTimePlugin
 
       SearchHistory = new List<string>();
       ArtistSearchHistory = new List<string>();
+      PresetIds = new List<string>();
+      PresetStations = new List<RadioTimeStation>();
+      
     }
 
     private string pluginName;
@@ -126,6 +132,13 @@ namespace RadioTimePlugin
         }
         xmlwriter.SetValue("radiotime", "artistSearchHistory", s);
 
+        s = "";
+        foreach (string ids in PresetIds)
+        {
+          s += ids + "|";
+        }
+        xmlwriter.SetValue("radiotime", "presetIds", s);
+
       }
     }
 
@@ -169,6 +182,18 @@ namespace RadioTimePlugin
           }
 
         }
+
+        searchs = xmlreader.GetValueAsString("radiotime", "presetIds", "");
+        if (!string.IsNullOrEmpty(searchs))
+        {
+          string[] array = searchs.Split('|');
+          for (int i = 0; i < array.Length && i < 25; i++)
+          {
+            if (!string.IsNullOrEmpty(array[i]))
+              PresetIds.Add(array[i]);
+          }
+        }
+
         PartnerId = "41";
       }
     }
