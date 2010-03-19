@@ -207,6 +207,7 @@ namespace RadioTimePlugin
                                       grabber.Settings.GetParamString()), Settings.GuideIdDescription);
         Settings.GuideId = string.Empty;
         Settings.GuideIdDescription = string.Empty;
+        LoadLocalPresetStations();
       }
       else
       {
@@ -440,6 +441,7 @@ namespace RadioTimePlugin
 
       dlg.Add(Translation.SortByName); // name
       dlg.Add(Translation.SortByBitrate); // bitrate
+      dlg.Add(Translation.NoSorting); // bitrate
       // set the focus to currently used sort method
       dlg.SelectedLabel = (int)curSorting;
 
@@ -452,10 +454,15 @@ namespace RadioTimePlugin
           curSorting = StationSort.SortMethod.bitrate;
           sortButton.Label = Translation.SortByBitrate;
       }
-      else
+      else if (dlg.SelectedLabelText == Translation.SortByName)
       {
         curSorting = StationSort.SortMethod.name;
         sortButton.Label = Translation.SortByName;
+      }
+      else
+      {
+        curSorting = StationSort.SortMethod.none;
+        sortButton.Label = Translation.NoSorting;
       }
 
       sortButton.IsAscending = mapSettings.SortAscending;
@@ -685,7 +692,8 @@ namespace RadioTimePlugin
         }
       }
       updateStationLogoTimer.Enabled = true;
-      listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
+      if (curSorting != StationSort.SortMethod.none)
+        listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
 
       GUIPropertyManager.SetProperty("#itemcount", grabber.Body.Count + " " + Translation.Objects);
       //GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
@@ -771,6 +779,9 @@ namespace RadioTimePlugin
               show = true;
             }
 
+            dlg.Add(Translation.AddToLocalPresets);
+
+
             if (!show)
               return;
 
@@ -780,7 +791,10 @@ namespace RadioTimePlugin
             if (dlg.SelectedLabelText == Translation.AddToFavorites)
               AddToFavorites(((RadioTimeOutline)selectedItem.MusicTag).GuidId);
             if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
-              RemoveFavorites(((RadioTimeOutline)selectedItem.MusicTag).PresetId); ;
+              RemoveFavorites(((RadioTimeOutline)selectedItem.MusicTag).PresetId);
+            if (dlg.SelectedLabelText == Translation.AddToLocalPresets)
+              AddToLocalPreset(((RadioTimeOutline)selectedItem.MusicTag).PresetId); 
+
 
             if (dlg.SelectedLabelText == Translation.ShowGiuide)
             {
@@ -800,7 +814,29 @@ namespace RadioTimePlugin
       }
     }
 
+    private void AddToLocalPreset(string presetid)
+    {
+      var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
+      if (dlg == null)
+        return;
+      dlg.Reset();
 
+      for (int i = 0; i < 10; i++)
+      {
+        if(_setting.PresetStations.Count>i+1)
+        {
+          if (string.IsNullOrEmpty(_setting.PresetStations[i].Name))
+            dlg.Add(string.Format("<{0}>", Translation.AddToLocalPresets));
+          else
+            dlg.Add(Translation.Empty);
+        }
+        dlg.Add(" ");
+      }
+
+      dlg.DoModal(GetID);
+      if (dlg.SelectedId == -1)
+        return;
+    }
 
     /// <summary>
     /// Removes the favorites.

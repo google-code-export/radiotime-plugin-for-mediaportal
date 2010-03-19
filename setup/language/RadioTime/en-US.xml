@@ -35,6 +35,7 @@
 
     <!-- N  -->
 	<string Field="NewSearch">New Search</string>
+	<string Field="NoSorting">No sorting</string>
     <string Field="NowPlaying">Now Playing</string>
     <string Field="NoStationsOrShowsAvailable">No stations or shows available</string>
 

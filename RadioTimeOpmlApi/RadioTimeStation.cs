@@ -34,6 +34,7 @@ namespace RadioTimeOpmlApi
     public List<RadioTimeOutline> Genres { get; set; }
     public List<RadioTimeOutline> Similar { get; set; }
 
+    public string Name { get; set; }
     public bool IsPreset { get; set; }
     public bool IsAvailable { get; set; }
     public bool HasSchedule { get; set; }
@@ -74,8 +75,11 @@ namespace RadioTimeOpmlApi
               case 0:
                 foreach (XmlNode childNode in node.ChildNodes[0].ChildNodes)
                 {
-                  switch (childNode.Name)
+                  switch (childNode.Name.ToLower())
                   {
+                    case "name":
+                      Name = childNode.InnerText;
+                      break;
                     case "language":
                       Language = childNode.InnerText;
                       break;

@@ -299,6 +299,21 @@ namespace RadioTimePlugin
       return Utils.GetCoverArtName(Thumbs.Radio, radioItem.Text);
     }
 
+    public void LoadLocalPresetStations()
+    {
+      for (int i = 0; i < 10; i++)
+      {
+        if (_setting.PresetStations.Count < i + 1)
+          _setting.PresetStations.Add(new RadioTimeStation());
+
+        if (_setting.PresetIds.Count > i )
+        {
+          _station = _setting.PresetStations[i];
+          _station.Grabber = grabber;
+          _station.Get(_setting.PresetIds[i]);
+        }
+      }
+    }
 
     public string DownloadStationLogo(RadioTimeOutline radioItem)
     {
