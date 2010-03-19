@@ -11,8 +11,18 @@ namespace RadioTimeOpmlApi
   /// <summary>
   /// Provide information about one station
   /// </summary>
-  public class RadioTimeNowPlaying
+  public class RadioTimeNowPlaying: ICloneable
   {
+    object ICloneable.Clone()
+    {
+      return this.Clone();
+    }
+
+    public RadioTimeNowPlaying Clone()
+    {
+      return (RadioTimeNowPlaying)this.MemberwiseClone();
+    }
+
     public string GuidId { get; set; }
     
     public string PresetId { get; set; }

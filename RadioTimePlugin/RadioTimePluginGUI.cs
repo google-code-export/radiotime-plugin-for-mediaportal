@@ -75,8 +75,6 @@ namespace RadioTimePlugin
       Filmstrip = 4,
     }
 
-
-
     #region locale vars
 
     private Identification iden = new Identification();
@@ -115,11 +113,6 @@ namespace RadioTimePlugin
     public RadioTimePluginGUI()
     {
       GetID = GetWindowId();
-      updateStationLogoTimer.AutoReset = true;
-      updateStationLogoTimer.Enabled = false;
-      updateStationLogoTimer.Elapsed += OnDownloadTimedEvent;
-      Client.DownloadFileCompleted += DownloadLogoEnd;
-      g_Player.PlayBackStopped += g_Player_PlayBackStopped;
       _setting.Load();
       iden.UserName = _setting.User;
       iden.PasswordKey = RadioTimeWebServiceHelper.HashMD5(_setting.Password);
@@ -130,20 +123,6 @@ namespace RadioTimePlugin
       grabber.Settings.PartnerId = _setting.PartnerId;
     }
 
-    void g_Player_PlayBackStopped(g_Player.MediaType type, int stoptime, string filename)
-    {
-      ClearProps();
-    }
-
-    void ClearProps()
-    {
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Station", " ");
-      GUIPropertyManager.SetProperty("#RadioTime.Play.StationLogo", " ");
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Duration", " ");
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Description", " ");
-      GUIPropertyManager.SetProperty("#RadioTime.Play.Location", " "); 
-    }
-    
     #region ISetupForm Members
     // return name of the plugin
     public string PluginName()
@@ -204,8 +183,17 @@ namespace RadioTimePlugin
     public override bool Init()
     {
       _setting.Language = GUILocalizeStrings.GetCultureName(GUILocalizeStrings.CurrentLanguage());
+
+      updateStationLogoTimer.AutoReset = true;
+      updateStationLogoTimer.Enabled = false;
+      updateStationLogoTimer.Elapsed += OnDownloadTimedEvent;
+      Client.DownloadFileCompleted += DownloadLogoEnd;
+
       Settings.NowPlaying = new RadioTimeNowPlaying();
-      Settings.NowPlayingStation=new RadioTimeStation();
+      Settings.NowPlayingStation = new RadioTimeStation();
+
+      ClearProps();
+       
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotime.xml");
     }
@@ -216,8 +204,9 @@ namespace RadioTimePlugin
       if (!string.IsNullOrEmpty(Settings.GuideId))
       {
         grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", Settings.GuideId,
-                                      grabber.Settings.GetParamString()));
+                                      grabber.Settings.GetParamString()), Settings.GuideIdDescription);
         Settings.GuideId = string.Empty;
+        Settings.GuideIdDescription = string.Empty;
       }
       else
       {
@@ -225,19 +214,30 @@ namespace RadioTimePlugin
         {
           if (_setting.ShowPresets)
           {
-            grabber.GetData(_setting.PresetsUrl, false, false);
+            grabber.GetData(_setting.StartupUrl, _setting.PluginName);
+            grabber.GetData(_setting.PresetsUrl, false, Translation.Presets);
+            oldSelection = 1;
           }
           else
           {
             Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
-            grabber.GetData(_setting.StartupUrl);
+            grabber.GetData(_setting.StartupUrl, _setting.PluginName);
           }
         }
       }
-      UpdateList();
-      listControl.SelectedListItemIndex = oldSelection;
+
       GUIPropertyManager.SetProperty("#header.label", " ");
       GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", " ");
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", "0");
+
+      UpdateList();
+      listControl.SelectedListItemIndex = oldSelection;
+      
+      GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SETFOCUS, GetID, 0, 50, 0, 0, null);
+      OnMessage(msg);
+
       if (sortButton != null)
       {
         sortButton.SortChanged += SortChanged;
@@ -259,21 +259,28 @@ namespace RadioTimePlugin
         SetProperty("#RadioTime.Translation." + name + ".Label", Translation.Strings[name]);
       }
 
-      g_Player.PlayBackStarted += g_Player_PlayBackStarted;
+      g_Player.PlayBackStarted += g_Player_PlayBackStartedFromGUI;
 
       base.OnPageLoad();
     }
 
-    void g_Player_PlayBackStarted(g_Player.MediaType type, string filename)
+    void g_Player_PlayBackStartedFromGUI(g_Player.MediaType type, string filename)
     {
       if (g_Player.IsVideo)
         g_Player.ShowFullScreenWindow();
     }
+
     // remeber the selection on page leave
     protected override void OnPageDestroy(int new_windowId)
     {
+      if (sortButton != null)
+      {
+        sortButton.SortChanged -= SortChanged;
+      }
+      g_Player.PlayBackStarted -= g_Player_PlayBackStartedFromGUI;
+
       oldSelection = listControl.SelectedListItemIndex;
-      g_Player.PlayBackStarted -= g_Player_PlayBackStarted;
+
       base.OnPageDestroy(new_windowId);
     }
     //// do the clicked action
@@ -331,20 +338,19 @@ namespace RadioTimePlugin
       }
       else if (control == homeButton)
       {
-        mapSettings.ViewAs = (int)View.List;
         ShowPanel();
         DoHome();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
       else if (control == genresButton)
       {
-        mapSettings.ViewAs = (int)View.List;
         ShowPanel();
         DoGenres();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
       else if (control == presetsButton)
       {
+        ShowPanel();
         DoPresets();
         GUIControl.FocusControl(GetID, listControl.GetID);
       }
@@ -358,8 +364,15 @@ namespace RadioTimePlugin
         RadioTime gr = new RadioTime();
         gr.Settings = grabber.Settings;
         gr.GetData(grabber.CurentUrl + "&filter=random");
-        if (gr.Body.Count > 0)
-          DoPlay(gr.Body[0]);
+        if (gr.Body.Count == 1)
+        {
+          if (!string.IsNullOrEmpty(gr.Body[0].GuidId))
+            DoPlay(gr.Body[0]);
+          else if (!string.IsNullOrEmpty(gr.Body[0].Text))
+            Err_message(gr.Body[0].Text);
+        }
+        else
+          Err_message(Translation.NoStationsOrShowsAvailable);
       }
       base.OnClicked(controlId, control, actionType);
     }
@@ -368,7 +381,7 @@ namespace RadioTimePlugin
     {
       Log.Debug("RadioTime page loading :{0}", _setting.StartupUrl);
       grabber.Reset();
-      grabber.GetData(_setting.StartupUrl);
+      grabber.GetData(_setting.StartupUrl, _setting.PluginName);
       UpdateList();
     }
 
@@ -377,7 +390,7 @@ namespace RadioTimePlugin
     {
       Log.Debug("RadioTime page loading :{0}", _setting.GenresUrl);
       //grabber.Reset();
-      grabber.GetData(_setting.GenresUrl);
+      grabber.GetData(_setting.GenresUrl, Translation.Genres);
       UpdateList();
     }
 
@@ -410,6 +423,7 @@ namespace RadioTimePlugin
       UpdateGui();
       base.OnAction(action);
     }
+
     // do regulary updates
     public override void Process()
     {
@@ -453,7 +467,7 @@ namespace RadioTimePlugin
 
     private void DoPresets()
     {
-      grabber.GetData(_setting.PresetsUrl,false,false);
+      grabber.GetData(_setting.PresetsUrl, false, Translation.Presets);
       UpdateList();
     }
 
@@ -469,14 +483,14 @@ namespace RadioTimePlugin
           switch (radioItem.Type)
           {
             case RadioTimeOutline.OutlineType.link:
-              if (string.IsNullOrEmpty(radioItem.Url))
+              if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
               {
                 grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
-                                              grabber.Settings.GetParamString()));
+                                              grabber.Settings.GetParamString()), selectedItem.Label);
               }
-              else
+              else if (!string.IsNullOrEmpty(radioItem.Url))
               {
-                grabber.GetData(radioItem.Url);                
+                grabber.GetData(radioItem.Url, selectedItem.Label);                
               }
               UpdateList();
               break;
@@ -484,16 +498,17 @@ namespace RadioTimePlugin
               DoPlay(radioItem);
               break;
             default:
-              if (string.IsNullOrEmpty(radioItem.Url))
+              if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
               {
                 grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
-                                              grabber.Settings.GetParamString()));
+                                              grabber.Settings.GetParamString()), selectedItem.Label);
+                UpdateList();
               }
-              else
+              else if (!string.IsNullOrEmpty(radioItem.Url))
               {
-                grabber.GetData(radioItem.Url);
+                grabber.GetData(radioItem.Url, selectedItem.Label);
+                UpdateList();
               }
-              UpdateList();
               break;
           }
         }
@@ -543,7 +558,7 @@ namespace RadioTimePlugin
 
       if ("" != searchString)
       {
-        grabber.SearchArtist(searchString);
+        grabber.SearchArtist(searchString, Translation.SearchArtist);
         UpdateList();
         if (_setting.ArtistSearchHistory.Contains(searchString.Trim()))
           _setting.ArtistSearchHistory.Remove(searchString.Trim());
@@ -573,7 +588,6 @@ namespace RadioTimePlugin
       if (searchString == string.Format("<{0}>", Translation.NewSearch))
         searchString = "";
 
-
       // display an virtual keyboard
       VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
       if (null == keyboard) return;
@@ -588,7 +602,7 @@ namespace RadioTimePlugin
 
       if ("" != searchString)
       {
-        grabber.Search(searchString);
+        grabber.Search(searchString, Translation.Search);
         UpdateList();
         if (_setting.SearchHistory.Contains(searchString.Trim()))
           _setting.SearchHistory.Remove(searchString.Trim());
@@ -621,10 +635,11 @@ namespace RadioTimePlugin
         // and add station name & bitrate
         item.Label = "..";
         item.Label2 = "(" + grabber.Parent.Body.Count.ToString() + ")";
+        item.OnItemSelected += item_OnItemSelected;
         item.IsFolder = true;
         item.IconImage = "defaultFolderBack.png";
         item.IconImageBig = "DefaultFolderBackBig.png";
-        //item.MusicTag = head;
+        item.MusicTag = null;
         listControl.Add(item);
       }
       foreach (RadioTimeOutline body in grabber.Body)
@@ -645,25 +660,25 @@ namespace RadioTimePlugin
           case RadioTimeOutline.OutlineType.audio:
             if (string.IsNullOrEmpty(item.IconImage))
             {
-              item.IconImage = "DefaultMyradio.png";
-              item.IconImageBig = "DefaultMyradio.png";
+              item.IconImage = "defaultMyRadio.png";
+              item.IconImageBig = "defaultMyRadioBig.png";
             }
             item.IsFolder = false;
             break;
           case RadioTimeOutline.OutlineType.link:
             if (string.IsNullOrEmpty(item.IconImage))
             {
-              item.IconImage = "DefaultMyradioStream.png";
-              item.IconImageBig = "DefaultMyradioStreamBig.png";
+              item.IconImage = "defaultFolder.png";
+              item.IconImageBig = "defaultFolderBig.png";
             }
             item.IsFolder = true;
             break;
           case RadioTimeOutline.OutlineType.unknow:
             {
-              item.IconImage = "DefaultMyradioStream.png";
-              item.IconImageBig = "DefaultMyradioStreamBig.png";
-              item.IsFolder = true;            
+              item.IconImage = "defaultFolder.png";
+              item.IconImageBig = "defaultFolderBig.png";
             }
+            item.IsFolder = true;
             break;
           default:
             break;
@@ -672,8 +687,9 @@ namespace RadioTimePlugin
       updateStationLogoTimer.Enabled = true;
       listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
 
-      GUIPropertyManager.SetProperty("#itemcount", "Items: " + listControl.Count.ToString());
-      GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
+      GUIPropertyManager.SetProperty("#itemcount", grabber.Body.Count + " " + Translation.Objects);
+      //GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
+      GUIPropertyManager.SetProperty("#header.label", grabber.NavigationTitle);
 
       if (grabber.CurentUrl.Contains("id="))
         randomButton.Disabled = false;
@@ -720,53 +736,68 @@ namespace RadioTimePlugin
     }
 
     protected override void OnShowContextMenu()
-    {    
-     GUIListItem selectedItem = listControl.SelectedListItem;
-     if (selectedItem != null)
-     {
-       //if (selectedItem.IsFolder)
-       //  return;
-       try
-       {
-         var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
-         if (dlg == null)
-           return;
-         dlg.Reset();
-         dlg.SetHeading(498); // menu
-         RadioTimeStation station = new RadioTimeStation {Grabber = grabber};
-        
-         station.Get(((RadioTimeOutline)selectedItem.MusicTag).GuidId);
+    {
+      GUIListItem selectedItem = listControl.SelectedListItem;
+      if (selectedItem != null)
+      {
+        if (selectedItem.Label != ".." && selectedItem.MusicTag != null && !selectedItem.IsFolder)
+        {
+          try
+          {
+            var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
+            if (dlg == null)
+              return;
+            dlg.Reset();
+            dlg.SetHeading(498); // menu
+            RadioTimeStation station = new RadioTimeStation { Grabber = grabber };
 
-         if (station.IsPreset)
-           dlg.Add(Translation.RemoveFromFavorites);
-         else
-           dlg.Add(Translation.AddToFavorites); 
-         
-         if(station.HasSchedule)
-           dlg.Add(Translation.ShowGiuide);
-         
-         dlg.DoModal(GetID);
-         if (dlg.SelectedId == -1)
-           return;
-         if (dlg.SelectedLabelText == Translation.AddToFavorites)
-           AddToFavorites(((RadioTimeOutline) selectedItem.MusicTag).PresetId);
-         if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
-           RemoveFavorites(((RadioTimeOutline)selectedItem.MusicTag).PresetId); ;
-       
-         if (dlg.SelectedLabelText == Translation.ShowGiuide)
-         {
-           MiniGuide miniGuide = (MiniGuide) GUIWindowManager.GetWindow(25651);
-           miniGuide.GuidId = ((RadioTimeOutline)selectedItem.MusicTag).GuidId;
-           miniGuide.Grabber = grabber;
-           miniGuide.DoModal(GetID);
-         }
-       }
-       catch(System.Web.Services.Protocols.SoapException ex)
-       {
-         Log.Error("[RadioTime] Comunication error or wrong user name or password ");
-         Log.Error(ex);
-       }
-     }
+            station.Get(((RadioTimeOutline)selectedItem.MusicTag).GuidId);
+
+            bool show = false;
+            if (station.IsPreset)
+            {
+              dlg.Add(Translation.RemoveFromFavorites);
+              show = true;
+            }
+            else
+            {
+              dlg.Add(Translation.AddToFavorites);
+              show = true;
+            }
+
+            if (station.HasSchedule)
+            {
+              dlg.Add(Translation.ShowGiuide);
+              show = true;
+            }
+
+            if (!show)
+              return;
+
+            dlg.DoModal(GetID);
+            if (dlg.SelectedId == -1)
+              return;
+            if (dlg.SelectedLabelText == Translation.AddToFavorites)
+              AddToFavorites(((RadioTimeOutline)selectedItem.MusicTag).GuidId);
+            if (dlg.SelectedLabelText == Translation.RemoveFromFavorites)
+              RemoveFavorites(((RadioTimeOutline)selectedItem.MusicTag).PresetId); ;
+
+            if (dlg.SelectedLabelText == Translation.ShowGiuide)
+            {
+              MiniGuide miniGuide = (MiniGuide)GUIWindowManager.GetWindow(25651);
+              miniGuide.GuidId = ((RadioTimeOutline)selectedItem.MusicTag).GuidId;
+              miniGuide.grabber = new RadioTime();
+              miniGuide.grabber.Settings = grabber.Settings;
+              miniGuide.DoModal(GetID);
+            }
+          }
+          catch (System.Web.Services.Protocols.SoapException ex)
+          {
+            Log.Error("[RadioTime] Comunication error or wrong user name or password ");
+            Log.Error(ex);
+          }
+        }
+      }
     }
 
 
@@ -810,10 +841,16 @@ namespace RadioTimePlugin
       GUIListItem selectedItem = listControl.SelectedListItem;
       if (selectedItem != null)
       {
-        RadioTimeOutline radioItem = ((RadioTimeOutline)selectedItem.MusicTag);
-        if (radioItem != null && !string.IsNullOrEmpty(radioItem.Image))
+        if (selectedItem.MusicTag !=null)
         {
+          RadioTimeOutline radioItem = ((RadioTimeOutline)selectedItem.MusicTag);
+
+          SetProperty("#selectedthumb", " ");
+          logoImage.SetFileName("");
+          Process();
+          SetProperty("#selectedthumb", selectedItem.IconImageBig);
           logoImage.SetFileName(DownloadStationLogo(radioItem));
+
           GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", radioItem.CurrentTrack);
           GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", radioItem.Subtext);
           GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", (radioItem.ReliabilityIdAsInt/10).ToString());
@@ -829,6 +866,7 @@ namespace RadioTimePlugin
           GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", " ");
           GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", " ");
           GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", " ");
+          GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", "0");
         }
       }
 
@@ -882,7 +920,6 @@ namespace RadioTimePlugin
       {
         File.Copy(Path.GetTempPath() + @"\station.png", curentDownlodingFile.FileName, true);
         UpdateGui();
-       
       }
     }            
 

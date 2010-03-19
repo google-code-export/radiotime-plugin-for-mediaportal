@@ -27,21 +27,15 @@ namespace RadioTimePlugin
     [SkinControl(37)]
     protected GUIListControl lstChannelsWithStateIcons = null;
 
-    private bool _canceled = false;
     private bool _running = false;
     private int _parentWindowID = 0;
     private GUIWindow _parentWindow = null;
 
     public string GuidId { get; set; }
-    public RadioTime Grabber { get; set; }
 
     public MiniGuide()
     {
       GetID = 25651;
-      updateStationLogoTimer.AutoReset = true;
-      updateStationLogoTimer.Enabled = true;
-      updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
-      Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
     }
 
     void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -54,23 +48,20 @@ namespace RadioTimePlugin
 
     public override bool Init()
     {
-      bool bResult = Load(GUIGraphicsContext.Skin + @"\RadioTimeMiniGuide.xml");
+      updateStationLogoTimer.AutoReset = true;
+      updateStationLogoTimer.Enabled = true;
+      updateStationLogoTimer.Elapsed -= new ElapsedEventHandler(OnDownloadTimedEvent);
+      updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
+      Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
 
-     // GUILayerManager.RegisterLayer(this, GUILayerManager.LayerType.MiniEPG);
-      //_canceled = true;
-      //LoadSettings();
+      bool bResult = Load(GUIGraphicsContext.Skin + @"\RadioTimeMiniGuide.xml");
       return bResult;
     }
 
     protected override void OnPageLoad()
     {
-      
-      Log.Debug("RadioTimeMiniGuide: onpageload");
+      Log.Debug("RadioTimeMiniGuide: OnPageLoad");
 
-
-      // following line should stay. Problems with OSD not
-      // appearing are already fixed elsewhere
-      //GUILayerManager.RegisterLayer(this, GUILayerManager.LayerType.MiniEPG);
       AllocResources();
       ResetAllControls(); // make sure the controls are positioned relevant to the OSD Y offset
       
@@ -89,8 +80,8 @@ namespace RadioTimePlugin
     private void FillList()
     {
       string url = string.Format("http://opml.radiotime.com/Browse.ashx?c=schedule&id={0}", GuidId);
-      Grabber.GetData(url, true, false);
-      foreach (var body in Grabber.Body)
+      grabber.GetData(url, true, false);
+      foreach (var body in grabber.Body)
       {
         GUIListItem item = new GUIListItem("");
         item.Label2 = ToMinutes(body.Duration);
@@ -106,7 +97,6 @@ namespace RadioTimePlugin
         var msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SETFOCUS, GetID, 0, 37, 0, 0, null);
         OnMessage(msg);
       }
-
     }
 
     void item_OnRetrieveArt(GUIListItem item)
@@ -122,7 +112,18 @@ namespace RadioTimePlugin
         }
       }
     }
-  
+
+    public override void OnAction(Action action)
+    {
+      if (action.wID == Action.ActionType.ACTION_PREVIOUS_MENU)
+      {
+        _running = false;
+      }
+      else
+      {
+        base.OnAction(action);
+      }
+    }
 
     public override bool OnMessage(GUIMessage message)
     {
@@ -175,8 +176,7 @@ namespace RadioTimePlugin
             else if (message.SenderControlId == 34) // exit button
             {
               // exit
-              Close();
-              _canceled = true;
+              _running = false;
             }
             break;
           }
@@ -196,7 +196,7 @@ namespace RadioTimePlugin
 
     public void DoModal(int dwParentId)
     {
-      //Log.Debug("TvMiniGuide: domodal");
+      //Log.Debug("TvMiniGuide: DoModal");
       _parentWindowID = dwParentId;
       _parentWindow = GUIWindowManager.GetWindow(_parentWindowID);
       if (null == _parentWindow)
@@ -229,11 +229,17 @@ namespace RadioTimePlugin
       GUIWindowManager.IsSwitchingToNewWindow = true;
       lock (this)
       {
-        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_WINDOW_DEINIT, GetID, 0, 0, 0, 0, null);
+        GUIMessage msg = null;
+        msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_WINDOW_DEINIT, GetID, 0, 0, 0, 0, null);
         OnMessage(msg);
 
         GUIWindowManager.UnRoute();
-        _running = false;
+
+        msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_WINDOW_INIT, _parentWindow.GetID, 0, 0, -1, 0, null);
+        OnMessage(msg);
+
+        GUIWindowManager.ActivateWindow(_parentWindow.GetID);
+
         _parentWindow = null;
       }
       GUIWindowManager.IsSwitchingToNewWindow = false;

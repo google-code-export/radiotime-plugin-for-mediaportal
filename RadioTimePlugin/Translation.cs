@@ -214,11 +214,11 @@ namespace RadioTimePlugin
     // G
     public static string Genres = "Genres";
 
-
     // H
     public static string Home = "Home";
 
     // I
+    public static string Items = "Items";
 
     // L
 
@@ -228,8 +228,10 @@ namespace RadioTimePlugin
     // N
     public static string NewSearch = "New Search";
     public static string NowPlaying = "Now Playing";
+    public static string NoStationsOrShowsAvailable = "No stations or shows available";
 
     // O
+    public static string Objects = "Objects";
 
     // P
     public static string Presets = "My Presets";

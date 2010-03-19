@@ -26,6 +26,7 @@
     <string Field="Home">Home</string>
 
     <!-- I  -->
+    <string Field="Items">Items</string>
 
     <!-- L  -->
 
@@ -35,8 +36,10 @@
     <!-- N  -->
 	<string Field="NewSearch">New Search</string>
     <string Field="NowPlaying">Now Playing</string>
+    <string Field="NoStationsOrShowsAvailable">No stations or shows available</string>
 
     <!-- O  -->
+    <string Field="Objects">Objects</string>
 
     <!-- P  -->
     <string Field="Presets">My Presets</string>

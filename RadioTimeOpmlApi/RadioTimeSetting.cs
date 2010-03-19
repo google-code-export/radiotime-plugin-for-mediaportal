@@ -16,14 +16,16 @@ namespace RadioTimeOpmlApi
 
     public RadioTimeSetting(RadioTimeSetting parent)
     {
-      User = parent.User; ;
+      User = parent.User;
       Mp3 = parent.Mp3;
       Wma = parent.Wma;
       Real = parent.Real;
+      Language = parent.Language;
+      PartnerId = parent.PartnerId;
+      Password = parent.Password;
     }
 
     public string Password { get; set; }
-
 
     public string User { get; set; }
 
