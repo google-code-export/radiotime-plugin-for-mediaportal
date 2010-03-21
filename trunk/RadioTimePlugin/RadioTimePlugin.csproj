@@ -58,6 +58,7 @@
     <Compile Include="MiniGuide.cs" />
     <Compile Include="NowPlayingGUI.cs" />
     <Compile Include="PlayListPLSEIO.cs" />
+    <Compile Include="PresetsGUI.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -90,6 +91,10 @@
       <Project>{82B4EC67-0245-4FA9-9B30-F740BF78D0C8}</Project>
       <Name>RadioTimeOpmlApi</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="radiotime.png" />
+    <EmbeddedResource Include="radiotime_disabled.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

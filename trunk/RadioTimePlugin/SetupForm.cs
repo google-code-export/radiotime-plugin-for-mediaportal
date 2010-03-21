@@ -21,6 +21,7 @@ namespace RadioTimePlugin
       textBox_passwd.Text = _setting.Password;
       textBox_name.Text = _setting.PluginName;
       checkBox5.Checked = _setting.UseVideo;
+      checkBox2.Checked = _setting.StartWithFastPreset;
     }
 
 
@@ -31,6 +32,7 @@ namespace RadioTimePlugin
       _setting.Password = textBox_passwd.Text;
       _setting.PluginName = textBox_name.Text;
       _setting.UseVideo = checkBox5.Checked;
+      _setting.StartWithFastPreset = checkBox2.Checked;
       _setting.Save();
       this.Close();
     }

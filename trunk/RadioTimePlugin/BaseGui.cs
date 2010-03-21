@@ -139,6 +139,21 @@ namespace RadioTimePlugin
       GUIPropertyManager.SetProperty("#Play.Current.Rating", "0");
     }
 
+    public void UpdateSelectedLabels(RadioTimeOutline radioItem)
+    {
+
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", radioItem.CurrentTrack);
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", radioItem.Subtext);
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", (radioItem.ReliabilityIdAsInt / 10).ToString());
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Logo", GetStationLogoFileName(radioItem));
+
+      if (_setting.FormatNames.ContainsKey(radioItem.Formats))
+        GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", _setting.FormatNames[radioItem.Formats]);
+      else
+        GUIPropertyManager.SetProperty("#RadioTime.Selected.Format", " ");
+      Process();
+    }
+
     public void OnDownloadTimedEvent(object source, ElapsedEventArgs e)
     {
       if (!Client.IsBusy && downloaQueue.Count > 0)
@@ -189,7 +204,7 @@ namespace RadioTimePlugin
       if (!_station.IsAvailable)
       {
         GUIWaitCursor.Hide();
-        Err_message(Translation.StationNotAvaiable);
+        ErrMessage(Translation.StationNotAvaiable);
         return;
       }
       //var nowPlaying = Settings.NowPlaying;
@@ -261,12 +276,12 @@ namespace RadioTimePlugin
       {
         _currentItem = null; 
         GUIWaitCursor.Hide();
-        Err_message(string.Format(Translation.PlayError, exception.Message));
+        ErrMessage(string.Format(Translation.PlayError, exception.Message));
         return;
       }
     }
 
-    public void Err_message(string langid)
+    public void ErrMessage(string langid)
     {
       GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
       if (dlgOK != null)
@@ -299,20 +314,46 @@ namespace RadioTimePlugin
       return Utils.GetCoverArtName(Thumbs.Radio, radioItem.Text);
     }
 
+    public string GetStationLogoFileName(string imgUrl, string name)
+    {
+      if (string.IsNullOrEmpty(imgUrl))
+        return string.Empty;
+      return Utils.GetCoverArtName(Thumbs.Radio, name);
+    }
+
     public void LoadLocalPresetStations()
     {
-      for (int i = 0; i < 10; i++)
+      _setting.PresetStations.Clear();
+      for (int i = 0; i < Settings.LOCAL_PRESETS_NUMBER; i++)
       {
-        if (_setting.PresetStations.Count < i + 1)
-          _setting.PresetStations.Add(new RadioTimeStation());
-
-        if (_setting.PresetIds.Count > i )
+        _setting.PresetStations.Add(new RadioTimeOutline());
+      }
+      int ii = 0;
+      GUIWaitCursor.Show();
+      Process();
+      grabber.GetData(_setting.PresetsUrl, false, Translation.Presets);
+      if (grabber.Body.Count > 0)
+      {
+        int i = 0;
+        foreach (var body in grabber.Body)
         {
-          _station = _setting.PresetStations[i];
-          _station.Grabber = grabber;
-          _station.Get(_setting.PresetIds[i]);
+          if(body.GuidId==_setting.FolderId)
+            ii = i;
+          i++;
+        }
+        GUIPropertyManager.SetProperty("#RadioTime.Presets.Folder.Name", grabber.Body[ii].Text);
+        grabber.GetData(grabber.Body[ii].Url);
+        foreach (RadioTimeOutline body in grabber.Body)
+        {
+          if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt < Settings.LOCAL_PRESETS_NUMBER)
+          {
+            _setting.PresetStations[body.PresetNumberAsInt] = body;
+          }
+          Process();
         }
       }
+      PopulatePresetsLabels();
+      GUIWaitCursor.Hide();
     }
 
     public string DownloadStationLogo(RadioTimeOutline radioItem)
@@ -323,6 +364,41 @@ namespace RadioTimePlugin
         downloaQueue.Enqueue(new DownloadFileObject(localFile, radioItem.Image.Replace("q.png", ".png")));
       }
       return localFile;
+    }
+
+    private void PopulatePresetsLabels()
+    {
+      for (int i = 1; i < Settings.LOCAL_PRESETS_NUMBER; i++)
+      {
+        if (string.IsNullOrEmpty(_setting.PresetStations[i].Text))
+          GUIPropertyManager.SetProperty(string.Format("#RadioTime.Presets.{0}.Name", i ),
+                                         string.Format("<{0}>", Translation.Empty));
+        else
+          GUIPropertyManager.SetProperty(string.Format("#RadioTime.Presets.{0}.Name", i ), _setting.PresetStations[i].Text);
+      }
+    }
+
+    public string GetPresetFolder()
+    {
+      RadioTime tempGrabber = new RadioTime();
+      tempGrabber.Settings = _setting;
+      tempGrabber.GetData(_setting.PresetsUrl, false, Translation.Presets);
+
+      var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
+      if (dlg == null)
+        return null;
+      dlg.Reset();
+      dlg.SetHeading(Translation.SelectPresetFolder);
+
+      foreach (RadioTimeOutline body in tempGrabber.Body)
+      {
+        dlg.Add(body.Text);
+      }
+
+      dlg.DoModal(GetID);
+      if (dlg.SelectedId == -1)
+        return null;
+      return tempGrabber.Body[dlg.SelectedId - 1].GuidId;
     }
 
   }

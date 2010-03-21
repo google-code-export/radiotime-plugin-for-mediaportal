@@ -109,13 +109,13 @@ namespace RadioTimeOpmlApi
     /// Adds the preset.
     /// </summary>
     /// <param name="id">The preset id.</param>
-    public void AddPreset(string id)
+    public void AddPreset(string id, string folderid, string prestnumber)
     {
-      WebClient client=new WebClient();
+      WebClient client = new WebClient();
       string url = string.Format(
-        "http://opml.radiotime.com/Preset.ashx?c=add&id={0}&partnerId={1}&username={2}&password={3}", id,
-        Settings.PartnerId, Settings.User, Settings.Password);
-     client.DownloadString(url);
+        "http://opml.radiotime.com/Preset.ashx?c=add&id={0}&partnerId={1}&username={2}&password={3}&folderId={4}&presetNumber={5}",
+        id, Settings.PartnerId, Settings.User, Settings.Password, folderid, prestnumber);
+      client.DownloadString(url);
     }
 
     /// <summary>

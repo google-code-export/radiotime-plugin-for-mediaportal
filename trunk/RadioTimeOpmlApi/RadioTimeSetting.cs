@@ -106,11 +106,11 @@ namespace RadioTimeOpmlApi
       {
         if (!string.IsNullOrEmpty(GetParamString()))
         {
-          return "http://opml.radiotime.com/GroupList.aspx?type=favorite&" + GetParamString();
+          return "http://opml.radiotime.com/Browse.ashx?c=presets&" + GetParamString();
         }
         else
         {
-          return "http://opml.radiotime.com/GroupList.aspx?type=favorite";
+          return "http://opml.radiotime.com/Browse.ashx?c=presets";
         }
       }
     }
