@@ -677,7 +677,7 @@ Minor bug fixes</VersionDescription>
           </GroupItem>
           <GroupItem Name="GenericSkin">
             <DisplayName>GenericSkin</DisplayName>
-            <DefaulChecked>false</DefaulChecked>
+            <DefaulChecked>true</DefaulChecked>
             <Description>GenericSkin</Description>
             <Files>
               <Items />
@@ -710,7 +710,7 @@ Minor bug fixes</VersionDescription>
 * Better preset management
 * Option for no sorting </VersionDescription>
         <DevelopmentStatus>Beta</DevelopmentStatus>
-        <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.0.0.mpe1</OnlineLocation>
+        <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.1.0.mpe1</OnlineLocation>
         <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
         <Tags>radio, online</Tags>
         <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
