@@ -296,7 +296,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
 * Better preset management
 * Option for no sorting </VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.0.0.mpe1</OnlineLocation>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.1.0.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
@@ -424,7 +424,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>radiotime_playlogo_100.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c4fce258-205c-4615-b529-e19f6c15a553}-radiotime_playlogo_100.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{8a7abfbd-9590-4a99-be0f-d84da7735dec}-radiotime_playlogo_100.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
