@@ -39,6 +39,7 @@ namespace RadioTimeOpmlApi
     public bool IsAvailable { get; set; }
     public bool HasSchedule { get; set; }
     public string Language { get; set; }
+    public string Logo { get; set; }
     public string Location { get; set; }
     public string Frequency { get; set; }
     public string Slogan { get; set; }
@@ -88,6 +89,9 @@ namespace RadioTimeOpmlApi
                       break;
                     case "slogan":
                       Slogan = childNode.InnerText;
+                      break;
+                    case "logo":
+                      Logo = childNode.InnerText;
                       break;
                     case "location":
                       Location = childNode.InnerText;

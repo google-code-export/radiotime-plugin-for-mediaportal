@@ -15,33 +15,26 @@ namespace RadioTimePlugin
 
   public class Settings : RadioTimeSetting
   {
-
+    public const int LOCAL_PRESETS_NUMBER = 11;
+    
     static public RadioTimeStation NowPlayingStation { get; set; }
     static public RadioTimeNowPlaying NowPlaying { get; set; }
     static public string GuideId { get; set; }
     static public string GuideIdDescription { get; set; }
+    static public Settings Instance { get; set; }
     public Dictionary<string, PlayerType> FormatPlayer { get; set; }
     public Dictionary<string, string> FormatNames { get; set; }
     public List<string> SearchHistory { get; set; }
     public List<string> ArtistSearchHistory { get; set; }
 
-    public List<string> PresetIds { get; set; }
-    public List<RadioTimeStation> PresetStations { get; set; }
- 
-    private string _password;
-    public new string Password
-    {
-      get { return _password; }
-      set { _password = value; }
-    }
+    public bool StartWithFastPreset { get; set; }
+    public bool FirtsStart { get; set; }
+    public string FolderId { get; set; }
 
-    private bool showpresets;
+    public List<RadioTimeOutline> PresetStations { get; set; }
 
-    public bool ShowPresets
-    {
-      get { return showpresets; }
-      set { showpresets = value; }
-    }
+    public new string Password { get; set; }
+    public bool ShowPresets { get; set; }
 
     public Settings()
       : base()
@@ -74,9 +67,9 @@ namespace RadioTimePlugin
 
       SearchHistory = new List<string>();
       ArtistSearchHistory = new List<string>();
-      PresetIds = new List<string>();
-      PresetStations = new List<RadioTimeStation>();
-      
+      PresetStations = new List<RadioTimeOutline>();
+      StartWithFastPreset = false;
+      FirtsStart = true;
     }
 
     private string pluginName;
@@ -117,6 +110,8 @@ namespace RadioTimePlugin
         xmlwriter.SetValue("radiotime", "password", Password);
         xmlwriter.SetValueAsBool("radiotime", "showpresets", ShowPresets);
         xmlwriter.SetValue("radiotime", "pluginname", PluginName);
+        xmlwriter.SetValue("radiotime", "FolderId", FolderId);
+        xmlwriter.SetValueAsBool("radiotime", "StartWithFastPreset", StartWithFastPreset);
 
         string s = "";
         foreach (string history in SearchHistory)
@@ -131,13 +126,6 @@ namespace RadioTimePlugin
           s += history + "|";
         }
         xmlwriter.SetValue("radiotime", "artistSearchHistory", s);
-
-        s = "";
-        foreach (string ids in PresetIds)
-        {
-          s += ids + "|";
-        }
-        xmlwriter.SetValue("radiotime", "presetIds", s);
 
       }
     }
@@ -155,8 +143,10 @@ namespace RadioTimePlugin
         UseVideo = xmlreader.GetValueAsBool("radiotime", "UseVideo", false);
         User = xmlreader.GetValueAsString("radiotime", "user", string.Empty);
         Password = xmlreader.GetValueAsString("radiotime", "password", string.Empty);
+        FolderId = xmlreader.GetValueAsString("radiotime", "FolderId", string.Empty);
         PluginName = xmlreader.GetValueAsString("radiotime", "pluginname", "RadioTime");
-
+        StartWithFastPreset = xmlreader.GetValueAsBool("radiotime", "StartWithFastPreset", false);
+        
         SearchHistory.Clear();
         ArtistSearchHistory.Clear();
         string searchs = xmlreader.GetValueAsString("radiotime", "searchHistory", "");
@@ -183,17 +173,7 @@ namespace RadioTimePlugin
 
         }
 
-        searchs = xmlreader.GetValueAsString("radiotime", "presetIds", "");
-        if (!string.IsNullOrEmpty(searchs))
-        {
-          string[] array = searchs.Split('|');
-          for (int i = 0; i < array.Length && i < 25; i++)
-          {
-            if (!string.IsNullOrEmpty(array[i]))
-              PresetIds.Add(array[i]);
-          }
-        }
-
+       
         PartnerId = "41";
       }
     }

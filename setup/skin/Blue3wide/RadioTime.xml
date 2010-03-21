@@ -49,7 +49,7 @@
           <id>5</id>
           <label>#RadioTime.Translation.Search.Label</label>
           <onright>50</onright>
-          <onup>4</onup>
+          <onup>11</onup>
           <ondown>7</ondown>
         </control>
 
@@ -131,6 +131,16 @@
           <label>#RadioTime.Translation.Random.Label</label>
           <onright>50</onright>
           <onup>9</onup>
+          <ondown>11</ondown>
+        </control>
+
+		<control>
+          <description>Fast Presets</description>
+          <type>button</type>
+          <id>11</id>
+          <label>#RadioTime.Translation.FastPresets.Label</label>
+          <onright>50</onright>
+          <onup>10</onup>
           <ondown>99</ondown>
         </control>
 		

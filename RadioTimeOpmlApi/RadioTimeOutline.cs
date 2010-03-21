@@ -27,7 +27,7 @@ namespace RadioTimeOpmlApi
 
     public RadioTimeOutline()
     {
-
+      Formats = "";
     }
 
     public RadioTimeOutline(XmlNode node)
@@ -88,6 +88,9 @@ namespace RadioTimeOpmlApi
       Remain = node.Attributes["seconds_remaining"] != null ? node.Attributes["seconds_remaining"].Value : string.Empty;
 
       Reliability = node.Attributes["reliability"] != null ? node.Attributes["reliability"].Value : string.Empty;
+
+      PresetNumber = node.Attributes["preset_number"] != null ? node.Attributes["preset_number"].Value : string.Empty;
+      
       //Now_playing_id = Type == OutlineType.audio ? node.Attributes["now_playing_id"].Value : string.Empty;
 
 
@@ -111,6 +114,7 @@ namespace RadioTimeOpmlApi
     public string GuidId { get; set; }
     public string PresetId { get; set; }
     public string Key { get; set; }
+    public string PresetNumber { get; set; }
 
     /// <summary>
     /// Gets the station id as int.
@@ -136,5 +140,14 @@ namespace RadioTimeOpmlApi
       }
     }
 
+    public int PresetNumberAsInt
+    {
+      get
+      {
+        int i = 0;
+        int.TryParse(PresetNumber, out i);
+        return i;
+      }
+    }
   }
 }

@@ -15,8 +15,10 @@
 
     <!-- E  -->
     <string Field="PlayError">Error in  playback {0}</string>
+	<string Field="Empty">Empty</string>
 
     <!-- F  -->
+    <string Field="FastPresets">Fast presets</string>
  
     <!-- G  -->
     <string Field="Genres">Genres</string>
@@ -53,6 +55,8 @@
     <string Field="Search">Search</string>
 	<string Field="SearchHistory">Search History</string>
     <string Field="SearchArtist">Search Artist</string>
+	<string Field="SelectPresetFolder">Select Preset Folder</string>
+	<string Field="SelectPresetNumber">Select Preset number</string>
     <string Field="SortByBitrate">Sort by bitrate</string>
     <string Field="SortByName">Sort by name</string>
     <string Field="Sorting">Sorting</string>

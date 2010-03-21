@@ -198,7 +198,6 @@ namespace RadioTimePlugin
 
     // A
     public static string AddToFavorites = "Add to favorites";
-    public static string AddToLocalPresets = "Add to local presets";
 
     // C
     public static string ComunicationError = "Comunication error or wrong user name or password";
@@ -211,7 +210,9 @@ namespace RadioTimePlugin
     public static string Empty = "Empty";
 
     // F
- 
+    public static string FastPresets = "Fast presets";
+    public static string Folders = "Folders";
+
     // G
     public static string Genres = "Genres";
 
@@ -246,6 +247,8 @@ namespace RadioTimePlugin
     public static string Search = "Search";
     public static string SearchHistory = "Search History";
     public static string SearchArtist = "Search Artist";
+    public static string SelectPresetFolder = "Select preset folder";
+    public static string SelectPresetNumber = "Select preset number";
     public static string SortByBitrate = "Sort by bitrate";
     public static string SortByName = "Sort by name";
     public static string Sorting = "Sorting";
