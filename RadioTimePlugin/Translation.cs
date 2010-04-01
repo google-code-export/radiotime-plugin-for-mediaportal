@@ -232,6 +232,7 @@ namespace RadioTimePlugin
     public static string NoSorting = "No sorting";
     public static string NowPlaying = "Now Playing";
     public static string NoStationsOrShowsAvailable = "No stations or shows available";
+    public static string NoPresetFoldersFound = "No preset folders found";
 
     // O
     public static string Objects = "Objects";

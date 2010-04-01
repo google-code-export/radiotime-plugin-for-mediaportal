@@ -205,17 +205,18 @@ namespace RadioTimePlugin
     protected override void OnPageLoad()
     {
         updateStationLogoTimer.Enabled = true;
+
         if (!string.IsNullOrEmpty(Settings.GuideId))
         {
           grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", Settings.GuideId,
                                         grabber.Settings.GetParamString()), Settings.GuideIdDescription);
           Settings.GuideId = string.Empty;
           Settings.GuideIdDescription = string.Empty;
-          LoadLocalPresetStations();
         }
         else
         {
-          if (grabber.Body.Count < 1)
+          //if (grabber.Body.Count < 1)
+          if (_setting.FirtsStart)
           {
             if (_setting.ShowPresets)
             {
@@ -258,7 +259,11 @@ namespace RadioTimePlugin
         case StationSort.SortMethod.name:
           sortButton.Label = Translation.SortByName;
           break;
+        case StationSort.SortMethod.none:
+          sortButton.Label = Translation.NoSorting;
+          break;
       }
+      sortButton.IsAscending = mapSettings.SortAscending;
       
       foreach (string name in Translation.Strings.Keys)
       {
@@ -269,8 +274,10 @@ namespace RadioTimePlugin
 
       if (_setting.StartWithFastPreset && _setting.FirtsStart)
       {
+        _setting.FirtsStart = false;
         GUIWindowManager.ReplaceWindow(25653);
       }
+      _setting.FirtsStart = false;
       base.OnPageLoad();
     }
 
@@ -454,7 +461,7 @@ namespace RadioTimePlugin
 
       dlg.Add(Translation.SortByName); // name
       dlg.Add(Translation.SortByBitrate); // bitrate
-      dlg.Add(Translation.NoSorting); // bitrate
+      dlg.Add(Translation.NoSorting); // no sorting
       // set the focus to currently used sort method
       dlg.SelectedLabel = (int)curSorting;
 
@@ -646,6 +653,8 @@ namespace RadioTimePlugin
     
     public void UpdateList()
     {
+      int grabberIndex = 0;
+
       updateStationLogoTimer.Enabled = false;
       downloaQueue.Clear();
       GUIControl.ClearControl(GetID, listControl.GetID);
@@ -684,6 +693,7 @@ namespace RadioTimePlugin
               item.IconImageBig = "defaultMyRadioBig.png";
             }
             item.IsFolder = false;
+            item.Year = ++grabberIndex;
             break;
           case RadioTimeOutline.OutlineType.link:
             if (string.IsNullOrEmpty(item.IconImage))
@@ -692,6 +702,7 @@ namespace RadioTimePlugin
               item.IconImageBig = "defaultFolderBig.png";
             }
             item.IsFolder = true;
+            item.Year = ++grabberIndex;
             break;
           case RadioTimeOutline.OutlineType.unknow:
             {
@@ -699,14 +710,15 @@ namespace RadioTimePlugin
               item.IconImageBig = "defaultFolderBig.png";
             }
             item.IsFolder = true;
+            item.Year = ++grabberIndex;
             break;
           default:
             break;
         }
       }
       updateStationLogoTimer.Enabled = true;
-      if (curSorting != StationSort.SortMethod.none)
-        listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
+      //if (curSorting != StationSort.SortMethod.none)
+      listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
 
       GUIPropertyManager.SetProperty("#itemcount", grabber.Body.Count + " " + Translation.Objects);
       //GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
@@ -827,65 +839,104 @@ namespace RadioTimePlugin
     /// <param name="p">The station id.</param>
     private void AddToFavorites(string presetid)
     {
-
       List<RadioTimeOutline> tempresets = new List<RadioTimeOutline>();
       
       string folderid = "";
+      string selectedID = "";
       RadioTime tempGrabber = new RadioTime();
       tempGrabber.Settings = _setting;
-      tempGrabber.GetData(_setting.PresetsUrl, false, Translation.Presets);
+      tempGrabber.GetData(_setting.PresetsUrl, false, false, Translation.Presets);
 
-      var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
-      if (dlg == null)
-        return;
-      dlg.Reset();
-      dlg.SetHeading(Translation.SelectPresetFolder);
-
+      int folderCount = 0;
       foreach (RadioTimeOutline body in tempGrabber.Body)
       {
-        dlg.Add(body.Text);
+        if (body.Type == RadioTimeOutline.OutlineType.link)
+          folderCount++;
+      }
+
+      if (folderCount == 0) // only one preset folder (main) - plugin chooses first empty space to put preset
+      {
+        // first i have to fill the list with taken preset numbers
+        List<int> takenPresets = new List<int>();
+        foreach (RadioTimeOutline body in tempGrabber.Body)
+        {
+          if (!string.IsNullOrEmpty(body.PresetNumber))
+            takenPresets.Add(body.PresetNumberAsInt);
+        }
+
+        int i = 1;
+        while (takenPresets.Contains(i)) // find empty space
+          i++;
+
+        selectedID = i.ToString();
+      }
+      else // more folders - ask user
+      {
+        var dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_MENU);
+        if (dlg == null)
+          return;
+        dlg.Reset();
+        dlg.SetHeading(Translation.SelectPresetFolder);
+
+        foreach (RadioTimeOutline body in tempGrabber.Body)
+        {
+          if (body.Type == RadioTimeOutline.OutlineType.link)
+            dlg.Add(body.Text);
+        }
+
+        dlg.DoModal(GetID);
+        if (dlg.SelectedId == -1)
+          return;
+        folderid = tempGrabber.Body[dlg.SelectedId - 1].GuidId;
+
+        tempGrabber.GetData(tempGrabber.Body[dlg.SelectedId - 1].Url, false, false);
+
+        // first i have to find out the largest preset number
+        int biggestPresetNumber = 0;
+        foreach (RadioTimeOutline body in tempGrabber.Body)
+        {
+          if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt > biggestPresetNumber)
+            biggestPresetNumber = body.PresetNumberAsInt;
+        }
+
+        // then i fill x number of presets
+        for (int i = 0; i < (biggestPresetNumber + Settings.LOCAL_PRESETS_NUMBER); i++)
+        {
+          tempresets.Add(new RadioTimeOutline());
+        }
+
+        // then i fill the list with existing presets from the folder
+        foreach (RadioTimeOutline body in tempGrabber.Body)
+        {
+          if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt-1 < tempresets.Count)
+          {
+            tempresets[body.PresetNumberAsInt-1] = body;
+          }
+        }
+
+        dlg.Reset();
+        dlg.SetHeading(Translation.SelectPresetNumber);
+
+        for (int i = 0; i < tempresets.Count; i++)
+        {
+          RadioTimeOutline outline = tempresets[i];
+          if (string.IsNullOrEmpty(outline.Text))
+            dlg.Add(string.Format("<{0}>", Translation.Empty));
+          else
+            dlg.Add(outline.Text);
+        }
+
+        dlg.DoModal(GetID);
+
+        if (dlg.SelectedId == -1)
+          return;
+
+        selectedID = dlg.SelectedId.ToString();
       }
       
-      dlg.DoModal(GetID);
-      if (dlg.SelectedId == -1)
-        return;
-      folderid = tempGrabber.Body[dlg.SelectedId - 1].GuidId;
-
-      tempGrabber.GetData(tempGrabber.Body[dlg.SelectedId - 1].Url);
-
-      for (int i = 0; i < Settings.LOCAL_PRESETS_NUMBER; i++)
-      {
-        tempresets.Add(new RadioTimeOutline());
-      }
-
-      foreach (RadioTimeOutline body in tempGrabber.Body)
-      {
-        if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt < Settings.LOCAL_PRESETS_NUMBER)
-        {
-          tempresets[body.PresetNumberAsInt] = body;
-        }
-      }
-
-      dlg.Reset();
-      dlg.SetHeading(Translation.SelectPresetNumber);
-
-      for (int i = 1; i < Settings.LOCAL_PRESETS_NUMBER; i++)
-      {
-        RadioTimeOutline outline = tempresets[i];
-        if (string.IsNullOrEmpty(outline.Text))
-          dlg.Add(string.Format("<{0}>", Translation.Empty));
-        else
-          dlg.Add(outline.Text);
-      }
-
-
-      dlg.DoModal(GetID);
-      if (dlg.SelectedId == -1)
-        return;
-
       try
       {
-        grabber.AddPreset(presetid, folderid, dlg.SelectedId.ToString());
+        grabber.AddPreset(presetid, folderid, selectedID);
         //UpdateList();
       }
       catch (Exception)

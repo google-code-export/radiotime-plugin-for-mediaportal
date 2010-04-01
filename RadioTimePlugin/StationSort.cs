@@ -48,18 +48,43 @@ namespace RadioTimePlugin
             return String.Compare(item2.Label, item1.Label, true);
           }
         case SortMethod.bitrate:
-          int bit1=0;
+          int bit1 = 0;
           int.TryParse(item1.Label2, out bit1);
           int bit2 = 0;
           int.TryParse(item2.Label2, out bit2);
-          if (sortAscending)
+          // we cannot sort folders by bitrate so i use name instead
+          if (item1.IsFolder && item2.IsFolder)
           {
-            return (int)(bit1 - bit2);
+              if (sortAscending)
+              {
+                  return String.Compare(item1.Label, item2.Label, true);
+              }
+              else
+              {
+                  return String.Compare(item2.Label, item1.Label, true);
+              }
           }
           else
           {
-            return (int)(bit2 - bit1);
+              if (sortAscending)
+              {
+                  return (int)(bit1 - bit2);
+              }
+              else
+              {
+                  return (int)(bit2 - bit1);
+              }
           }
+        case SortMethod.none:
+          if (sortAscending)
+          {
+              return (int)(item1.Year - item2.Year);
+          }
+          else
+          {
+              return (int)(item2.Year - item1.Year);
+          }
+
       }
       return 0;
     }
