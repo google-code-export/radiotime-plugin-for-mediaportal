@@ -35,6 +35,10 @@ namespace RadioTimePlugin
     {
       grabber = new RadioTime();
 
+      updateStationLogoTimer.AutoReset = true;
+      updateStationLogoTimer.Enabled = false;
+      updateStationLogoTimer.Elapsed -= new ElapsedEventHandler(OnDownloadTimedEvent);
+      updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
       Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
       return Load(GUIGraphicsContext.Skin + @"\RadioTimePresets.xml");
 
@@ -42,6 +46,8 @@ namespace RadioTimePlugin
 
     protected override void OnPageLoad()
     {
+      updateStationLogoTimer.Enabled = true;
+
       _setting = Settings.Instance;
       grabber.Settings.User = _setting.User;
       grabber.Settings.Password = _setting.Password;
@@ -61,6 +67,12 @@ namespace RadioTimePlugin
       GUIControl.FocusControl(GetID, GetFocusControlId());
 
       base.OnPageLoad();
+    }
+
+    protected override void OnPageDestroy(int newWindowId)
+    {
+      updateStationLogoTimer.Enabled = false;
+      base.OnPageDestroy(newWindowId);
     }
     
     public override bool OnMessage(GUIMessage message)

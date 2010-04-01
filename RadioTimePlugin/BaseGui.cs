@@ -151,6 +151,8 @@ namespace RadioTimePlugin
       GUIPropertyManager.SetProperty("#RadioTime.Selected.NowPlaying", radioItem.CurrentTrack);
       GUIPropertyManager.SetProperty("#RadioTime.Selected.Subtext", radioItem.Subtext);
       GUIPropertyManager.SetProperty("#RadioTime.Selected.Reliability", (radioItem.ReliabilityIdAsInt / 10).ToString());
+
+      GUIPropertyManager.SetProperty("#RadioTime.Selected.Logo", " ");
       GUIPropertyManager.SetProperty("#RadioTime.Selected.Logo", DownloadStationLogo(radioItem));
 
       if (_setting.FormatNames.ContainsKey(radioItem.Formats))
