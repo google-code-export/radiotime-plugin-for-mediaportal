@@ -15,7 +15,7 @@ namespace RadioTimePlugin
 
   public class Settings : RadioTimeSetting
   {
-    public const int LOCAL_PRESETS_NUMBER = 11;
+    public const int LOCAL_PRESETS_NUMBER = 10;
     
     static public RadioTimeStation NowPlayingStation { get; set; }
     static public RadioTimeNowPlaying NowPlaying { get; set; }

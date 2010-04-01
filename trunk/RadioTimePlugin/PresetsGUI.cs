@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Timers;
+using System.IO;
 using MediaPortal.GUI.Library;
 using RadioTimeOpmlApi;
 
@@ -33,34 +34,43 @@ namespace RadioTimePlugin
     public override bool Init()
     {
       grabber = new RadioTime();
+
+      Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
       return Load(GUIGraphicsContext.Skin + @"\RadioTimePresets.xml");
+
     }
 
     protected override void OnPageLoad()
     {
-    
       _setting = Settings.Instance;
       grabber.Settings.User = _setting.User;
       grabber.Settings.Password = _setting.Password;
       grabber.Settings.PartnerId = _setting.PartnerId;
-      // show the skin
       LoadLocalPresetStations();
+
+      if (String.IsNullOrEmpty(GUIPropertyManager.GetProperty("#RadioTime.Presets.Folder.Name").Trim()))
+        GUIControl.DisableControl(GetID, folderButton.GetID);
+      else
+        GUIControl.EnableControl(GetID, folderButton.GetID);
 
       foreach (string name in Translation.Strings.Keys)
       {
         SetProperty("#RadioTime.Translation." + name + ".Label", Translation.Strings[name]);
       }
 
+      GUIControl.FocusControl(GetID, GetFocusControlId());
+
       base.OnPageLoad();
     }
     
     public override bool OnMessage(GUIMessage message)
     {
-      Log.Error(message.Message.ToString());
-      if (message.Message == GUIMessage.MessageType.GUI_MSG_SETFOCUS && message.TargetControlId > 100 && message.TargetControlId<Settings.LOCAL_PRESETS_NUMBER+100)
+      //Log.Error(" PresetsGUI OnMessage: " + message.Message.ToString());
+
+      if (message.Message == GUIMessage.MessageType.GUI_MSG_SETFOCUS && message.TargetControlId > 100 && message.TargetControlId<=Settings.LOCAL_PRESETS_NUMBER+100)
       {
-        if (_setting.PresetStations.Count > message.TargetControlId - 100)
-          UpdateSelectedLabels(_setting.PresetStations[message.TargetControlId - 100]);
+        if (_setting.PresetStations.Count >= message.TargetControlId - 100)
+          UpdateSelectedLabels(_setting.PresetStations[message.TargetControlId - 100 - 1]);
       }
       return base.OnMessage(message);
     }
@@ -70,20 +80,24 @@ namespace RadioTimePlugin
       
       if (control.GetType() == typeof(GUIButtonControl))
       {
-        if (controlId > 100 && controlId < Settings.LOCAL_PRESETS_NUMBER + 100)
+        if (controlId > 100 && controlId <= Settings.LOCAL_PRESETS_NUMBER + 100)
         {
-          DoPlay(_setting.PresetStations[controlId - 100]);
+          DoPlay(_setting.PresetStations[controlId - 100 - 1]);
         }
       }
       if (control == homeButton)
       {
-        _setting.FirtsStart = false;
         GUIWindowManager.ActivateWindow(25650);
       }
       else if (control == folderButton)
       {
         string s = GetPresetFolder();
-        if (s != null)
+        if (s == noPresetFolders)
+        {
+          ErrMessage(Translation.NoPresetFoldersFound);
+          GUIControl.DisableControl(GetID, folderButton.GetID);
+        }
+        else if (s != null)
         {
           _setting.FolderId = s;
           _setting.Save();
@@ -93,5 +107,17 @@ namespace RadioTimePlugin
 
       base.OnClicked(controlId, control, actionType);
     }
+
+    void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+    {
+      if (e.Error == null)
+      {
+        File.Copy(Path.GetTempPath() + @"\station.png", curentDownlodingFile.FileName, true);
+        int focusID = GetFocusControlId();
+        if (focusID > 100 && focusID <= Settings.LOCAL_PRESETS_NUMBER + 100)
+          UpdateSelectedLabels(_setting.PresetStations[focusID - 100 - 1]);
+      }
+    }
+  
   }
 }

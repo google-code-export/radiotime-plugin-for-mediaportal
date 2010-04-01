@@ -40,6 +40,7 @@
 	<string Field="NoSorting">No sorting</string>
     <string Field="NowPlaying">Now Playing</string>
     <string Field="NoStationsOrShowsAvailable">No stations or shows available</string>
+    <string Field="NoPresetFoldersFound">No preset folders found</string>
 
     <!-- O  -->
     <string Field="Objects">Objects</string>
