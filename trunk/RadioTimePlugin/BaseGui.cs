@@ -233,6 +233,13 @@ namespace RadioTimePlugin
         loader.Load(playList, TargetFile);
         File.Delete(TargetFile);
 
+        if (playList[0].FileName.ToLower().StartsWith("http") && playList[0].FileName.ToLower().Contains(".m3u"))
+        {
+          client.DownloadFile(playList[0].FileName, TargetFile);
+          loader.Load(playList, TargetFile);
+          File.Delete(TargetFile);
+        }
+
         if (playList[0].FileName.ToLower().Contains(".pls"))
         {
           //string s = Path.GetTempFileName();
