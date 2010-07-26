@@ -144,6 +144,23 @@
           <ondown>99</ondown>
         </control>
 		
+		<control>
+          <description>MPEIUPDATE:71cc3381-de92-482d-9556-7e86f67f8067</description>
+          <type>button</type>
+          <id>90</id>
+          <label>#MPEI.Translation.NewVersion.Label</label>
+          <onright>50</onright>
+		  <visible>string.equals(#mpei.71cc3381_de92_482d_9556_7e86f67f8067.haveupdate,true)</visible>
+        </control>
+
+		<control>
+          <description>MPEICONFIGURE:71cc3381-de92-482d-9556-7e86f67f8067</description>
+          <type>button</type>
+          <id>91</id>
+          <label>#MPEI.Translation.Settings.Label</label>
+          <onright>50</onright>
+        </control>
+		
       </control>
 
      </control>

@@ -13,29 +13,29 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.dll</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{9d15977c-1bbd-41fd-b841-3e0d7ad182de}-RadioTimeOpmlApi.dll</ZipFileName>
-              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.pdb</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{98c922a4-e916-4e1e-a5d2-2c4531adea4a}-RadioTimeOpmlApi.pdb</ZipFileName>
-              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.dll</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{392c1e4d-a4e4-4ba1-a81d-97dcf761d2fa}-RadioTimePlugin.dll</ZipFileName>
+              <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimePlugin.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2ed79708-728e-43eb-9e86-7bb90dce57b0}-RadioTimePlugin.dll</ZipFileName>
               <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.dll</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.pdb</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{965e276f-0eea-4b15-a560-6a45cf547b8c}-RadioTimePlugin.pdb</ZipFileName>
+              <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimeOpmlApi.pdb</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3c77372b-2390-4276-86f2-2ee1949eb8e4}-RadioTimeOpmlApi.pdb</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimeOpmlApi.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e2921003-3d69-4ea4-a43d-d7e39d690436}-RadioTimeOpmlApi.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimePlugin.pdb</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{25f44663-4986-4d23-a1a7-37bf30461137}-RadioTimePlugin.pdb</ZipFileName>
               <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.pdb</DestinationFilename>
             </FileItem>
           </Items>
@@ -378,29 +378,29 @@ This changes are done by SilentExcept</VersionDescription>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.dll</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{9d15977c-1bbd-41fd-b841-3e0d7ad182de}-RadioTimeOpmlApi.dll</ZipFileName>
-        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimeOpmlApi.pdb</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{98c922a4-e916-4e1e-a5d2-2c4531adea4a}-RadioTimeOpmlApi.pdb</ZipFileName>
-        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.dll</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{392c1e4d-a4e4-4ba1-a81d-97dcf761d2fa}-RadioTimePlugin.dll</ZipFileName>
+        <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimePlugin.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2ed79708-728e-43eb-9e86-7bb90dce57b0}-RadioTimePlugin.dll</ZipFileName>
         <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\RadioTimePlugin\bin\Debug\RadioTimePlugin.pdb</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{965e276f-0eea-4b15-a560-6a45cf547b8c}-RadioTimePlugin.pdb</ZipFileName>
+        <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimeOpmlApi.pdb</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3c77372b-2390-4276-86f2-2ee1949eb8e4}-RadioTimeOpmlApi.pdb</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.pdb</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimeOpmlApi.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e2921003-3d69-4ea4-a43d-d7e39d690436}-RadioTimeOpmlApi.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\RadioTimeOpmlApi.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\RadioTimePlugin.pdb</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{25f44663-4986-4d23-a1a7-37bf30461137}-RadioTimePlugin.pdb</ZipFileName>
         <DestinationFilename>%Plugins%\Windows\RadioTimePlugin.pdb</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
@@ -498,7 +498,7 @@ This changes are done by SilentExcept</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>radiotime_playlogo_100.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c19e0d1d-0c82-4496-ab80-5b48bc25b55a}-radiotime_playlogo_100.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{0c7b2323-6d70-4102-b52c-9d007a4dc3ce}-radiotime_playlogo_100.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
