@@ -1,0 +1,15 @@
+<extension_settings>
+	<settings section="defauls">
+	<!-- 
+	  type : - string
+			 - bool 
+			 - list
+			 - int
+	<setting name="" entryname="" displayname="" defaultvalue="" type="" listvalues="" displaylistvalues=""/> 
+	-->	
+ 		<setting name="user" entryname="radiotime" displayname="User Name" defaultvalue="" type="string" listvalues="" displaylistvalues=""/> 
+		<setting name="password" entryname="radiotime" displayname="Password" defaultvalue="" type="string" listvalues="" displaylistvalues=""/> 
+		<setting name="pluginname" entryname="radiotime" displayname="Plugin Name" defaultvalue="RadioTime" type="string" listvalues="" displaylistvalues=""/> 		
+		<setting name="StartWithFastPreset" entryname="radiotime" displayname="Show fast preset on startup" defaultvalue="no" type="string" listvalues="yes|no" displaylistvalues="Yes|No"/> 		
+	</settings>
+</extension_settings>
