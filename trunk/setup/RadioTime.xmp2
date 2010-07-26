@@ -119,6 +119,27 @@
               <ZipFileName>Installer{CopyFile}\{dd154667-00d3-44a5-8b8a-74dc98dd640c}-da.xml</ZipFileName>
               <DestinationFilename>%Language%\RadioTime\da.xml</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>language\RadioTime\de.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e8dcf51b-9591-4762-8242-a3be50a23c63}-de.xml</ZipFileName>
+              <DestinationFilename>%Language%\RadioTime\de.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>language\RadioTime\fr.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{22dabdcc-7cac-42e7-b16d-b03e52855071}-fr.xml</ZipFileName>
+              <DestinationFilename>%Language%\RadioTime\fr.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>language\RadioTime\ru.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{1c360882-e418-4d24-b84a-3e7fa0448a8a}-ru.xml</ZipFileName>
+              <DestinationFilename>%Language%\RadioTime\ru.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -169,6 +190,23 @@
               <LocalFileName>skin\Blue3wide\Media\radiotime_logo.png</LocalFileName>
               <ZipFileName>Installer{GenericSkinFile}\{912deda1-4c80-43c2-a963-93282605a73d}-radiotime_logo.png</ZipFileName>
               <DestinationFilename>%Skin%\[DEFAULT]\Media\radiotime_logo.png</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Settings">
+        <ParentGroup />
+        <DisplayName>Settings</DisplayName>
+        <DefaulChecked>false</DefaulChecked>
+        <Description>Settings</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>settings\extension_settings.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0edd5a57-4cea-4905-9feb-5cdeef9e2e42}-extension_settings.xml</ZipFileName>
+              <DestinationFilename>%Base%\extension_settings.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -287,19 +325,22 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>0</Major>
       <Minor>6</Minor>
-      <Build>1</Build>
+      <Build>2</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Plugin for browse and play more that 100.000 online radio stations from RadioTime.com</ExtensionDescription>
-    <VersionDescription>* Lot of fixes done by 
-* Separated window for presets
-* Better preset management
-* Option for no sorting </VersionDescription>
+    <VersionDescription>Improved PresetGUI and loading of presets
+Improved no sorting method (folders always first, sorted by the index as they are on RadioTime)
+Improved bitrate sorting (folders don't have bitrate so they are sorted by name instead of randomly)
+Improved add to favorites 
+  - when there is only one folder, plugin automatically adds station to first empty space
+  - more than 10 favorites can be stored. presets are shown as they are in the folder (together with empty spaces) and then 10 more empty presets are added for user to choose from - hard to describe :))
+This changes are done by SilentExcept</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.1.0.mpe1</OnlineLocation>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.2.0.mpe1</OnlineLocation>
     <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
     <Tags>radio, online</Tags>
-    <Location>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
+    <Location>d:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -323,6 +364,11 @@ Click Next to continue or Cancel to exit Setup.</Value>
           <Value />
           <ValueType>String</ValueType>
           <Description>Online stored screenshot urls separated by ; </Description>
+        </SectionParam>
+        <SectionParam Name="Force to uninstall on update">
+          <Value>yes</Value>
+          <ValueType>Bool</ValueType>
+          <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
         </SectionParam>
       </Items>
     </Params>
@@ -420,11 +466,39 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <ZipFileName>Installer{CopyFile}\{dd154667-00d3-44a5-8b8a-74dc98dd640c}-da.xml</ZipFileName>
         <DestinationFilename>%Language%\RadioTime\da.xml</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>language\RadioTime\de.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e8dcf51b-9591-4762-8242-a3be50a23c63}-de.xml</ZipFileName>
+        <DestinationFilename>%Language%\RadioTime\de.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>language\RadioTime\fr.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{22dabdcc-7cac-42e7-b16d-b03e52855071}-fr.xml</ZipFileName>
+        <DestinationFilename>%Language%\RadioTime\fr.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>language\RadioTime\ru.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{1c360882-e418-4d24-b84a-3e7fa0448a8a}-ru.xml</ZipFileName>
+        <DestinationFilename>%Language%\RadioTime\ru.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>settings\extension_settings.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0edd5a57-4cea-4905-9feb-5cdeef9e2e42}-extension_settings.xml</ZipFileName>
+        <DestinationFilename>%Base%\extension_settings.xml</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>radiotime_playlogo_100.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8a7abfbd-9590-4a99-be0f-d84da7735dec}-radiotime_playlogo_100.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{c19e0d1d-0c82-4496-ab80-5b48bc25b55a}-radiotime_playlogo_100.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -462,8 +536,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Recursive>true</Recursive>
       </FolderGroup>
     </FolderGroups>
-    <ProjectFilename>F:\devel\vs2005\RadioTimePlugin\setup\RadioTime.xmp2</ProjectFilename>
-    <UpdatePath1>F:\devel\vs2005\RadioTimePlugin\setup\update.xml</UpdatePath1>
+    <ProjectFilename>d:\devel\vs2005\RadioTimePlugin\setup\RadioTime.xmp2</ProjectFilename>
+    <UpdatePath1>d:\devel\vs2005\RadioTimePlugin\setup\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
