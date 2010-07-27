@@ -95,6 +95,9 @@ namespace RadioTimePlugin
           else
             titleString = _nowPlaying.Location;
 
+        //Log.Debug("#Play.Current.Album: " + GUIPropertyManager.GetProperty("#Play.Current.Album"));
+        //Log.Debug("titleString: " + titleString);
+
         if (string.IsNullOrEmpty(GUIPropertyManager.GetProperty("#Play.Current.Album").Trim()))
           GUIPropertyManager.SetProperty("#Play.Current.Album", titleString);
         //_nowPlaying.Name + "/" + _nowPlaying.Description + "/" + _nowPlaying.Location);
