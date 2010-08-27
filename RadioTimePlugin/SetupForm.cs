@@ -22,6 +22,7 @@ namespace RadioTimePlugin
       textBox_name.Text = _setting.PluginName;
       checkBox5.Checked = _setting.UseVideo;
       checkBox2.Checked = _setting.StartWithFastPreset;
+      cbJumpNowPlaying.Checked = _setting.JumpNowPlaying;
     }
 
 
@@ -33,6 +34,7 @@ namespace RadioTimePlugin
       _setting.PluginName = textBox_name.Text;
       _setting.UseVideo = checkBox5.Checked;
       _setting.StartWithFastPreset = checkBox2.Checked;
+      _setting.JumpNowPlaying = cbJumpNowPlaying.Checked;
       _setting.Save();
       this.Close();
     }

@@ -285,6 +285,8 @@ namespace RadioTimePlugin
     {
       if (g_Player.IsVideo)
         g_Player.ShowFullScreenWindow();
+      else if (_setting.JumpNowPlaying)
+        GUIWindowManager.ActivateWindow(25652);
     }
 
     // remeber the selection on page leave

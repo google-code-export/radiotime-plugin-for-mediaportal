@@ -98,6 +98,14 @@ namespace RadioTimePlugin
       set { usevideo = value; }
     }
 
+    private bool jumpNowPlaying;
+
+    public bool JumpNowPlaying
+    {
+      get { return jumpNowPlaying; }
+      set { jumpNowPlaying = value; }
+    }
+
     public void Save()
     {
       using (MediaPortal.Profile.Settings xmlwriter = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
@@ -106,6 +114,7 @@ namespace RadioTimePlugin
         xmlwriter.SetValueAsBool("radiotime", "wma", Wma);
         xmlwriter.SetValueAsBool("radiotime", "real", Real);
         xmlwriter.SetValueAsBool("radiotime", "UseVideo", UseVideo);
+        xmlwriter.SetValueAsBool("radiotime", "JumpNowPlaying", JumpNowPlaying); 
         xmlwriter.SetValue("radiotime", "user", User);
         xmlwriter.SetValue("radiotime", "password", Password);
         xmlwriter.SetValueAsBool("radiotime", "showpresets", ShowPresets);
@@ -141,6 +150,7 @@ namespace RadioTimePlugin
         Real = xmlreader.GetValueAsBool("radiotime", "real", false);
         ShowPresets = xmlreader.GetValueAsBool("radiotime", "showpresets", false);
         UseVideo = xmlreader.GetValueAsBool("radiotime", "UseVideo", false);
+        JumpNowPlaying = xmlreader.GetValueAsBool("radiotime", "JumpNowPlaying", false);
         User = xmlreader.GetValueAsString("radiotime", "user", string.Empty);
         Password = xmlreader.GetValueAsString("radiotime", "password", string.Empty);
         FolderId = xmlreader.GetValueAsString("radiotime", "FolderId", string.Empty);

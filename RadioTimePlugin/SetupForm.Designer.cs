@@ -42,13 +42,14 @@ namespace RadioTimePlugin
       this.checkBox5 = new System.Windows.Forms.CheckBox();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.checkBox2 = new System.Windows.Forms.CheckBox();
+      this.cbJumpNowPlaying = new System.Windows.Forms.CheckBox();
       this.groupBox2.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.SuspendLayout();
       // 
       // button1
       // 
-      this.button1.Location = new System.Drawing.Point(250, 181);
+      this.button1.Location = new System.Drawing.Point(250, 209);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(75, 23);
       this.button1.TabIndex = 0;
@@ -60,7 +61,7 @@ namespace RadioTimePlugin
       // 
       this.linkLabel1.AutoSize = true;
       this.linkLabel1.Cursor = System.Windows.Forms.Cursors.Hand;
-      this.linkLabel1.Location = new System.Drawing.Point(6, 207);
+      this.linkLabel1.Location = new System.Drawing.Point(6, 235);
       this.linkLabel1.Name = "linkLabel1";
       this.linkLabel1.Size = new System.Drawing.Size(287, 13);
       this.linkLabel1.TabIndex = 4;
@@ -124,7 +125,7 @@ namespace RadioTimePlugin
       // 
       // textBox_name
       // 
-      this.textBox_name.Location = new System.Drawing.Point(82, 181);
+      this.textBox_name.Location = new System.Drawing.Point(82, 209);
       this.textBox_name.Name = "textBox_name";
       this.textBox_name.Size = new System.Drawing.Size(162, 20);
       this.textBox_name.TabIndex = 6;
@@ -132,7 +133,7 @@ namespace RadioTimePlugin
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(9, 186);
+      this.label3.Location = new System.Drawing.Point(9, 214);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(67, 13);
       this.label3.TabIndex = 7;
@@ -141,7 +142,7 @@ namespace RadioTimePlugin
       // checkBox5
       // 
       this.checkBox5.AutoSize = true;
-      this.checkBox5.Location = new System.Drawing.Point(9, 155);
+      this.checkBox5.Location = new System.Drawing.Point(9, 178);
       this.checkBox5.Name = "checkBox5";
       this.checkBox5.Size = new System.Drawing.Size(120, 17);
       this.checkBox5.TabIndex = 8;
@@ -171,11 +172,22 @@ namespace RadioTimePlugin
       this.checkBox2.Text = "Start with fast preset window ";
       this.checkBox2.UseVisualStyleBackColor = true;
       // 
+      // cbJumpNowPlaying
+      // 
+      this.cbJumpNowPlaying.AutoSize = true;
+      this.cbJumpNowPlaying.Location = new System.Drawing.Point(9, 155);
+      this.cbJumpNowPlaying.Name = "cbJumpNowPlaying";
+      this.cbJumpNowPlaying.Size = new System.Drawing.Size(231, 17);
+      this.cbJumpNowPlaying.TabIndex = 10;
+      this.cbJumpNowPlaying.Text = "Jump to NowPlaying Screen on stream start";
+      this.cbJumpNowPlaying.UseVisualStyleBackColor = true;
+      // 
       // SetupForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(334, 235);
+      this.ClientSize = new System.Drawing.Size(334, 263);
+      this.Controls.Add(this.cbJumpNowPlaying);
       this.Controls.Add(this.checkBox2);
       this.Controls.Add(this.pictureBox1);
       this.Controls.Add(this.checkBox5);
@@ -185,6 +197,7 @@ namespace RadioTimePlugin
       this.Controls.Add(this.linkLabel1);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.button1);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "SetupForm";
@@ -214,5 +227,6 @@ namespace RadioTimePlugin
     private System.Windows.Forms.CheckBox checkBox5;
     private System.Windows.Forms.PictureBox pictureBox1;
     private System.Windows.Forms.CheckBox checkBox2;
+    private System.Windows.Forms.CheckBox cbJumpNowPlaying;
   }
 }

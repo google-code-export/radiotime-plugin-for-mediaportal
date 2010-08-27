@@ -95,6 +95,8 @@ namespace RadioTimePlugin
         if (controlId > 100 && controlId <= Settings.LOCAL_PRESETS_NUMBER + 100)
         {
           DoPlay(_setting.PresetStations[controlId - 100 - 1]);
+          if (_setting.JumpNowPlaying)
+            GUIWindowManager.ActivateWindow(25652);
         }
       }
       if (control == homeButton)
