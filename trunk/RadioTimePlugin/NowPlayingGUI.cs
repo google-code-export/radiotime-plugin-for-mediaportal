@@ -61,21 +61,15 @@ namespace RadioTimePlugin
 
     public override void Process()
     {
-      if (!g_Player.Playing)
-      {
-        facadeGenres.Visible = false;
-        facadeSimilar.Visible = false;
-      }
-      else
-      {
-        facadeGenres.Visible = true;
-        facadeSimilar.Visible = true;
-      }
-
       if (facadeGenres.Count < 1)
-        facadeGenres.Visible = false;
+        GUIPropertyManager.SetProperty("#RadioTime.Genre.Items", string.Empty);
+      else
+        GUIPropertyManager.SetProperty("#RadioTime.Genre.Items", "true");
+
       if (facadeSimilar.Count < 1)
-        facadeSimilar.Visible = false;
+        GUIPropertyManager.SetProperty("#RadioTime.Similar.Items", string.Empty);
+      else
+        GUIPropertyManager.SetProperty("#RadioTime.Similar.Items", "true");
     }
     
     public override bool Init()
