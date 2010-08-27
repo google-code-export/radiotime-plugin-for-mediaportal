@@ -61,17 +61,11 @@ namespace RadioTimePlugin
 
     public override void Process()
     {
-      if (facadeGenres.Count < 1)
-        GUIPropertyManager.SetProperty("#RadioTime.Genre.Items", string.Empty);
-      else
-        GUIPropertyManager.SetProperty("#RadioTime.Genre.Items", "true");
-
-      if (facadeSimilar.Count < 1)
-        GUIPropertyManager.SetProperty("#RadioTime.Similar.Items", string.Empty);
-      else
-        GUIPropertyManager.SetProperty("#RadioTime.Similar.Items", "true");
+      GUIPropertyManager.SetProperty("#RadioTime.Genre.Items", facadeGenres.Count == 0 ? string.Empty : "true");
+      GUIPropertyManager.SetProperty("#RadioTime.Similar.Items", facadeSimilar.Count == 0 ? string.Empty : "true");
     }
-    
+
+
     public override bool Init()
     {
       updateStationLogoTimer.AutoReset = true;
