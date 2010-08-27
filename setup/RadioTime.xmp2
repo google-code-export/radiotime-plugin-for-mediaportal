@@ -325,20 +325,14 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>0</Major>
       <Minor>6</Minor>
-      <Build>2</Build>
+      <Build>3</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Plugin for browse and play more that 100.000 online radio stations from RadioTime.com</ExtensionDescription>
-    <VersionDescription>Improved PresetGUI and loading of presets
-Improved no sorting method (folders always first, sorted by the index as they are on RadioTime)
-Improved bitrate sorting (folders don't have bitrate so they are sorted by name instead of randomly)
-Improved add to favorites 
-  - when there is only one folder, plugin automatically adds station to first empty space
-  - more than 10 favorites can be stored. presets are shown as they are in the folder (together with empty spaces) and then 10 more empty presets are added for user to choose from - hard to describe :))
-This changes are done by SilentExcept</VersionDescription>
+    <VersionDescription>Some skinning improvements </VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.2.0.mpe1</OnlineLocation>
-    <ReleaseDate>2010-02-16T22:38:05.53125+02:00</ReleaseDate>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.3.0.mpe1</OnlineLocation>
+    <ReleaseDate>2010-08-27T22:38:05</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>d:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
     <Params>
@@ -498,7 +492,7 @@ This changes are done by SilentExcept</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>radiotime_playlogo_100.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0c7b2323-6d70-4102-b52c-9d007a4dc3ce}-radiotime_playlogo_100.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{78164616-ca9f-426e-b588-5c9ef5db37db}-radiotime_playlogo_100.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -536,7 +530,7 @@ This changes are done by SilentExcept</VersionDescription>
         <Recursive>true</Recursive>
       </FolderGroup>
     </FolderGroups>
-    <ProjectFilename>d:\devel\vs2005\RadioTimePlugin\setup\RadioTime.xmp2</ProjectFilename>
+    <ProjectFilename>D:\devel\vs2005\RadioTimePlugin\setup\RadioTime.xmp2</ProjectFilename>
     <UpdatePath1>d:\devel\vs2005\RadioTimePlugin\setup\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
