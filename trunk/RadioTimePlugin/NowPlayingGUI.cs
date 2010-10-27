@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Timers;
+using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using MediaPortal.Player;
+using MediaPortal.TagReader;
 using RadioTimeOpmlApi;
 
 namespace RadioTimePlugin
@@ -73,9 +75,25 @@ namespace RadioTimePlugin
       updateStationLogoTimer.Elapsed -= new ElapsedEventHandler(OnDownloadTimedEvent);
       updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
       Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
-
+      BassMusicPlayer.Player.InternetStreamSongChanged += Player_InternetStreamSongChanged;
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotimenowplaying.xml");
+    }
+
+    void Player_InternetStreamSongChanged(object sender)
+    {
+      if(!g_Player.Playing)
+        return;
+      BassAudioEngine engine = sender as BassAudioEngine;
+      MusicTag tag = engine.GetStreamTags();
+      var dlg1 = (GUIDialogNotify)GUIWindowManager.GetWindow((int)Window.WINDOW_DIALOG_NOTIFY);
+      if (dlg1 == null) return;
+      dlg1.Reset();
+      dlg1.SetHeading("");
+      dlg1.SetText(tag.Artist + "-" + tag.Title);
+      dlg1.Reset();
+      dlg1.TimeOut = 3;
+      dlg1.DoModal(GetID);
     }
 
     protected override void OnPageLoad()
