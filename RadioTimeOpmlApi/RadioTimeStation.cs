@@ -51,7 +51,9 @@ namespace RadioTimeOpmlApi
       string sUrl = string.Format("http://opml.radiotime.com/Describe.ashx?id={0}&detail=genre,recommendation&{1}", GuideId, Grabber.Settings.GetParamString());
       
       //Log.Debug("Get Station " + sUrl);
-
+      IsAvailable = true;
+      if(string.IsNullOrEmpty(GuideId))
+        return;
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {
@@ -126,7 +128,7 @@ namespace RadioTimeOpmlApi
             i++;
           }
         }
-        catch
+        catch (Exception exception)
         {
         }
         Slogan = string.IsNullOrEmpty(Slogan) ? " " : Slogan;
@@ -136,7 +138,7 @@ namespace RadioTimeOpmlApi
 
     private System.IO.Stream RetrieveData(String sUrl)
     {
-      if (sUrl == null || sUrl.Length < 1 || sUrl[0] == '/')
+      if (string.IsNullOrEmpty(sUrl) || sUrl[0] == '/')
       {
         return null;
       }

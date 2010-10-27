@@ -230,20 +230,31 @@ namespace RadioTimePlugin
       {
         string TargetFile = Path.GetTempFileName();
         WebClient client = new WebClient();
-        client.DownloadFile(item.Url, TargetFile);
-        IPlayListIO loader = new PlayListM3uIO();
         PlayList playList = new PlayList();
-        loader.Load(playList, TargetFile);
-        File.Delete(TargetFile);
-
-        if (playList[0].FileName.ToLower().StartsWith("http") && playList[0].FileName.ToLower().Contains(".m3u"))
+        if (item.Url.ToLower().Contains(".pls"))
         {
-          client.DownloadFile(playList[0].FileName, TargetFile);
+          client.DownloadFile(item.Url, TargetFile);
+          IPlayListIO loader = new PlayListPLSEIO();
+          loader.Load(playList, TargetFile);
+          File.Delete(TargetFile);
+        }
+        else
+        {
+          client.DownloadFile(item.Url, TargetFile);
+          IPlayListIO loader = new PlayListM3uIO();
           loader.Load(playList, TargetFile);
           File.Delete(TargetFile);
         }
 
-        if (playList[0].FileName.ToLower().Contains(".pls"))
+        if (playList.Count>0 && playList[0].FileName.ToLower().StartsWith("http") && playList[0].FileName.ToLower().Contains(".m3u"))
+        {
+          client.DownloadFile(playList[0].FileName, TargetFile);
+          IPlayListIO loader1 = new PlayListM3uIO();
+          loader1.Load(playList, TargetFile);
+          File.Delete(TargetFile);
+        }
+
+        if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".pls"))
         {
           //string s = Path.GetTempFileName();
           //client.DownloadFile(playList[0].FileName, s);
@@ -252,7 +263,7 @@ namespace RadioTimePlugin
           //File.Delete(s);
         }
 
-        if (playList[0].FileName.ToLower().Contains(".m3u"))
+        if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".m3u"))
         {
           IPlayListIO loader1 = new PlayListM3uIO();
           string files = playList[0].FileName;
@@ -264,7 +275,11 @@ namespace RadioTimePlugin
           }
         }
 
-        _currentFileName = playList[0].FileName;
+        if (playList.Count > 0)
+          _currentFileName = playList[0].FileName;
+        else
+          _currentFileName = item.Url;
+
         switch (playerType)
         {
           case PlayerType.Audio:
