@@ -228,6 +228,7 @@ namespace RadioTimePlugin
             {
               Log.Info("RadioTime page loading :{0}", _setting.StartupUrl);
               grabber.GetData(_setting.StartupUrl, _setting.PluginName);
+              //grabber.Body.Add(new RadioTimeOutline() { Url = "http://opml.radiotime.com/Search.ashx?query=aa2", Type = RadioTimeOutline.OutlineType.link, Text = "Test feeed" });
             }
           }
         }
