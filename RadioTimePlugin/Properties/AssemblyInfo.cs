@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using MediaPortal.Common.Utils;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -31,5 +32,11 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.6.3.0")]
-[assembly: AssemblyFileVersion("0.6.3.0")]
+[assembly: AssemblyVersion("0.6.5.0")]
+[assembly: AssemblyFileVersion("0.6.5.0")]
+
+[assembly: CompatibleVersion("1.1.6.27644")]
+[assembly: UsesSubsystem("MP.SkinEngine")]
+[assembly: UsesSubsystem("MP.Players.Video")]
+[assembly: UsesSubsystem("MP.Players.Music")]
+[assembly: UsesSubsystem("MP.Config")]

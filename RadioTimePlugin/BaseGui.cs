@@ -25,6 +25,7 @@ namespace RadioTimePlugin
     private string _currentFileName = string.Empty;
     private RadioTimeOutline _currentItem = null;
     protected const string noPresetFolders = "NOPRESETFOLDERS";
+    protected static WaitCursor _waitCursor = null;
 
     public BaseGui()
     {
@@ -203,115 +204,138 @@ namespace RadioTimePlugin
     /// <param name="item">The item.</param>
     public void DoPlay(RadioTimeOutline item)
     {
-      GUIWaitCursor.Show();
-
-      _currentItem = item.Clone();
-
-      //RadioTimeStation station = Settings.NowPlayingStation;
-      _station = new RadioTimeStation();
-      _station.Grabber = grabber;
-      _station.Get(item.GuidId);
-      
-      if (!_station.IsAvailable)
-      {
-        GUIWaitCursor.Hide();
-        ErrMessage(Translation.StationNotAvaiable);
-        return;
-      }
-      //var nowPlaying = Settings.NowPlaying;
-      _nowPlaying = new RadioTimeNowPlaying();
-      _nowPlaying.Grabber = grabber;
-      _nowPlaying.Get(item.GuidId);
-
-      PlayerType playerType = PlayerType.Video;
-      if (_setting.FormatPlayer.ContainsKey(item.Formats))
-        playerType = _setting.FormatPlayer[item.Formats];
+      ShowWaitCursor();
       try
       {
-        string TargetFile = Path.GetTempFileName();
-        WebClient client = new WebClient();
-        PlayList playList = new PlayList();
-        if (item.Url.ToLower().Contains(".pls"))
-        {
-          client.DownloadFile(item.Url, TargetFile);
-          IPlayListIO loader = new PlayListPLSEIO();
-          loader.Load(playList, TargetFile);
-          File.Delete(TargetFile);
-        }
-        else
-        {
-          client.DownloadFile(item.Url, TargetFile);
-          IPlayListIO loader = new PlayListM3uIO();
-          loader.Load(playList, TargetFile);
-          File.Delete(TargetFile);
-        }
+        _currentItem = item.Clone();
 
-        if (playList.Count>0 && playList[0].FileName.ToLower().StartsWith("http") && playList[0].FileName.ToLower().Contains(".m3u"))
-        {
-          client.DownloadFile(playList[0].FileName, TargetFile);
-          IPlayListIO loader1 = new PlayListM3uIO();
-          loader1.Load(playList, TargetFile);
-          File.Delete(TargetFile);
-        }
+        //RadioTimeStation station = Settings.NowPlayingStation;
+        _station = new RadioTimeStation();
+        _station.Grabber = grabber;
+        _station.Get(item.GuidId);
 
-        if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".pls"))
+        if (_station.IsAvailable)
         {
-          //string s = Path.GetTempFileName();
-          //client.DownloadFile(playList[0].FileName, s);
-          IPlayListIO loader1 = new PlayListPLSEIO();
-          loader1.Load(playList, playList[0].FileName);
-          //File.Delete(s);
-        }
+          //var nowPlaying = Settings.NowPlaying;
+          _nowPlaying = new RadioTimeNowPlaying();
+          _nowPlaying.Grabber = grabber;
+          _nowPlaying.Get(item.GuidId);
 
-        if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".m3u"))
-        {
-          IPlayListIO loader1 = new PlayListM3uIO();
-          string files = playList[0].FileName;
-          loader1.Load(playList, playList[0].FileName);
-          if (playList.Count == 0)
+          PlayerType playerType = PlayerType.Video;
+          if (_setting.FormatPlayer.ContainsKey(item.Formats))
+            playerType = _setting.FormatPlayer[item.Formats];
+
+          try
           {
-            IPlayListIO loader2 = new PlayListPLSEIO();
-            loader2.Load(playList, files);
+            PlayList playList = new PlayList();
+            //if (item.Url.ToLower().Contains(".pls") || item.Url.ToLower().Contains(".m3u") || item.Url.ToLower().Contains(".asx"))
+            {
+              string TargetFile = Path.GetTempFileName();
+              WebClient client = new WebClient();
+              if (item.Url.ToLower().Contains(".pls"))
+              {
+                client.DownloadFile(item.Url, TargetFile);
+                IPlayListIO loader = new PlayListPLSEIO();
+                loader.Load(playList, TargetFile);
+                File.Delete(TargetFile);
+              }
+              else if (item.Url.ToLower().Contains(".asx"))
+              {
+                client.DownloadFile(item.Url, TargetFile);
+                IPlayListIO loader = new PlayListASXIO();
+                loader.Load(playList, TargetFile);
+                File.Delete(TargetFile);
+              }
+              else
+              {
+                client.DownloadFile(item.Url, TargetFile);
+                IPlayListIO loader = new PlayListM3uIO();
+                loader.Load(playList, TargetFile);
+                File.Delete(TargetFile);
+              }
+
+              //if (playList.Count > 0 && playList[0].FileName.ToLower().StartsWith("http") && playList[0].FileName.ToLower().Contains(".m3u"))
+              //{
+              //  client.DownloadFile(playList[0].FileName, TargetFile);
+              //  IPlayListIO loader1 = new PlayListM3uIO();
+              //  loader1.Load(playList, TargetFile);
+              //  File.Delete(TargetFile);
+              //}
+
+              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".pls"))
+              {
+                client.DownloadFile(playList[0].FileName, TargetFile);
+                IPlayListIO loader1 = new PlayListPLSEIO();
+                //loader1.Load(playList, playList[0].FileName);
+                loader1.Load(playList, TargetFile);
+                File.Delete(TargetFile);
+              }
+
+              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".asx"))
+              {
+                client.DownloadFile(playList[0].FileName, TargetFile);
+                IPlayListIO loader1 = new PlayListASXIO();
+                loader1.Load(playList, TargetFile);
+                File.Delete(TargetFile);
+              }
+
+              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".m3u"))
+              {
+                client.DownloadFile(playList[0].FileName, TargetFile);
+                IPlayListIO loader1 = new PlayListM3uIO();
+                loader1.Load(playList, TargetFile);
+                if (playList.Count == 0)
+                {
+                  IPlayListIO loader2 = new PlayListPLSEIO();
+                  loader2.Load(playList, TargetFile);
+                }
+                File.Delete(TargetFile);
+              }
+            }
+
+            if (playList.Count > 0)
+              _currentFileName = playList[0].FileName;
+            else
+              _currentFileName = item.Url;
+            
+
+            switch (playerType)
+            {
+              case PlayerType.Audio:
+                ClearPlayProps();
+                g_Player.PlayAudioStream(_currentFileName);
+                return;
+              case PlayerType.Video:
+                // test if the station have tv group
+                ClearPlayProps();
+                if (item.GenreId == "g260" || item.GenreId == "g83" || item.GenreId == "g374" || item.GenreId == "g2769")
+                  g_Player.PlayVideoStream(_currentFileName);
+                else
+                  g_Player.Play(_currentFileName, g_Player.MediaType.Unknown);
+                return;
+              case PlayerType.Unknow:
+                return;
+              default:
+                return;
+            }
+
+            // moved to PLAYBACKSTARTED EVENT
+            //if  (isPlaying && g_Player.CurrentFile == playList[0].FileName)
+          }
+          catch (Exception exception)
+          {
+            _currentItem = null;
+            ErrMessage(string.Format(Translation.PlayError, exception.Message));
+            return;
           }
         }
-
-        if (playList.Count > 0)
-          _currentFileName = playList[0].FileName;
-        else
-          _currentFileName = item.Url;
-
-        switch (playerType)
-        {
-          case PlayerType.Audio:
-            ClearPlayProps();
-            g_Player.PlayAudioStream(_currentFileName);
-            break;
-          case PlayerType.Video:
-            // test if the station have tv group
-            ClearPlayProps();
-            if (item.GenreId == "g260" || item.GenreId == "g83" || item.GenreId == "g374" || item.GenreId == "g2769")
-              g_Player.PlayVideoStream(_currentFileName);
-            else
-              g_Player.Play(_currentFileName, g_Player.MediaType.Unknown);
-            break;
-          case PlayerType.Unknow:
-            break;
-          default:
-            break;
-        }
-
-        // moved to PLAYBACKSTARTED EVENT
-        //if  (isPlaying && g_Player.CurrentFile == playList[0].FileName)
-
-        GUIWaitCursor.Hide();
       }
-      catch (Exception exception)
+      finally
       {
-        _currentItem = null; 
-        GUIWaitCursor.Hide();
-        ErrMessage(string.Format(Translation.PlayError, exception.Message));
-        return;
+        HideWaitCursor();
       }
+      ErrMessage(Translation.StationNotAvaiable);
+      return;
     }
 
     public void ErrMessage(string langid)
@@ -362,45 +386,51 @@ namespace RadioTimePlugin
         _setting.PresetStations.Add(new RadioTimeOutline());
       }
       int ii = 0;
-      GUIWaitCursor.Show();
-      Process();
-      grabber.GetData(_setting.PresetsUrl, false, false, Translation.Presets);
-
-      int folderCount = 0;
-      foreach (RadioTimeOutline body in grabber.Body)
+      ShowWaitCursor();
+      try
       {
-        if (body.Type == RadioTimeOutline.OutlineType.link)
-          folderCount++;
-      }
-
-      if (folderCount == 0)
-      {
-        GUIPropertyManager.SetProperty("#RadioTime.Presets.Folder.Name", " ");
-      }
-      else
-      {
-        int i = 0;
-        foreach (var body in grabber.Body)
-        {
-          if(body.GuidId==_setting.FolderId)
-            ii = i;
-          i++;
-        }
-        GUIPropertyManager.SetProperty("#RadioTime.Presets.Folder.Name", grabber.Body[ii].Text);
-        grabber.GetData(grabber.Body[ii].Url, false, false);
-      }
-      
-      foreach (RadioTimeOutline body in grabber.Body)
-      {
-        if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt-1 < Settings.LOCAL_PRESETS_NUMBER)
-        {
-          _setting.PresetStations[body.PresetNumberAsInt-1] = body;
-        }
         Process();
-      }
+        grabber.GetData(_setting.PresetsUrl, false, false, Translation.Presets);
 
-      PopulatePresetsLabels();
-      GUIWaitCursor.Hide();
+        int folderCount = 0;
+        foreach (RadioTimeOutline body in grabber.Body)
+        {
+          if (body.Type == RadioTimeOutline.OutlineType.link)
+            folderCount++;
+        }
+
+        if (folderCount == 0)
+        {
+          GUIPropertyManager.SetProperty("#RadioTime.Presets.Folder.Name", " ");
+        }
+        else
+        {
+          int i = 0;
+          foreach (var body in grabber.Body)
+          {
+            if (body.GuidId == _setting.FolderId)
+              ii = i;
+            i++;
+          }
+          GUIPropertyManager.SetProperty("#RadioTime.Presets.Folder.Name", grabber.Body[ii].Text);
+          grabber.GetData(grabber.Body[ii].Url, false, false);
+        }
+
+        foreach (RadioTimeOutline body in grabber.Body)
+        {
+          if (!string.IsNullOrEmpty(body.PresetNumber) && body.PresetNumberAsInt - 1 < Settings.LOCAL_PRESETS_NUMBER)
+          {
+            _setting.PresetStations[body.PresetNumberAsInt - 1] = body;
+          }
+          Process();
+        }
+
+        PopulatePresetsLabels();
+      }
+      finally
+      {
+        HideWaitCursor();
+      }
     }
 
     public string DownloadStationLogo(RadioTimeOutline radioItem)
@@ -456,6 +486,20 @@ namespace RadioTimePlugin
       }
       else 
         return noPresetFolders;
+    }
+
+    public static void ShowWaitCursor()
+    {
+      //_waitCursor = new WaitCursor();
+    }
+
+    public static void HideWaitCursor()
+    {
+      if (_waitCursor != null)
+      {
+        _waitCursor.Dispose();
+        _waitCursor = null;
+      }
     }
 
   }

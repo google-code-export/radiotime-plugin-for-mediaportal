@@ -9,6 +9,8 @@ using MediaPortal.Player;
 using MediaPortal.TagReader;
 using RadioTimeOpmlApi;
 
+using Action = MediaPortal.GUI.Library.Action;
+
 namespace RadioTimePlugin
 {
   public class NowPlayingGUI:BaseGui
@@ -75,7 +77,7 @@ namespace RadioTimePlugin
       updateStationLogoTimer.Elapsed -= new ElapsedEventHandler(OnDownloadTimedEvent);
       updateStationLogoTimer.Elapsed += new ElapsedEventHandler(OnDownloadTimedEvent);
       Client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Client_DownloadFileCompleted);
-      BassMusicPlayer.Player.InternetStreamSongChanged += Player_InternetStreamSongChanged;
+      //BassMusicPlayer.Player.InternetStreamSongChanged += Player_InternetStreamSongChanged;
       // show the skin
       return Load(GUIGraphicsContext.Skin + @"\radiotimenowplaying.xml");
     }
@@ -162,17 +164,23 @@ namespace RadioTimePlugin
       if (control == facadeSimilar)
       {
         GUIListItem selectedItem = facadeSimilar.SelectedListItem;
-        GUIWaitCursor.Show();
-        if (selectedItem != null)
+        ShowWaitCursor();
+        try
         {
-          RadioTimeOutline radioItem = ((RadioTimeOutline) selectedItem.MusicTag);
-          if (radioItem != null)
+          if (selectedItem != null)
           {
-            DoPlay(radioItem);
-            Refresh();
+            RadioTimeOutline radioItem = ((RadioTimeOutline)selectedItem.MusicTag);
+            if (radioItem != null)
+            {
+              DoPlay(radioItem);
+              Refresh();
+            }
           }
         }
-        GUIWaitCursor.Hide();
+        finally
+        {
+          HideWaitCursor();
+        }
       }
 
       if (control == facadeGenres)

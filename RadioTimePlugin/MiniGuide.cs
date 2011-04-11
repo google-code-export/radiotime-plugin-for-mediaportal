@@ -12,6 +12,8 @@ using MediaPortal.Profile;
 using MediaPortal.Util;
 using RadioTimeOpmlApi;
 
+using Action = MediaPortal.GUI.Library.Action;
+
 namespace RadioTimePlugin
 {
   public class MiniGuide : BaseGui, IRenderLayer

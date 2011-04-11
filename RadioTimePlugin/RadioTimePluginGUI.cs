@@ -19,6 +19,8 @@ using MediaPortal.Playlists;
 using RadioTimeOpmlApi;
 using RadioTimeOpmlApi.com.radiotime.services;
 
+using Action = MediaPortal.GUI.Library.Action;
+
 namespace RadioTimePlugin
 {
   [PluginIcons("RadioTimePlugin.radiotime.png", "RadioTimePlugin.radiotime_disabled.png")]
@@ -503,53 +505,59 @@ namespace RadioTimePlugin
 
     private void DoListSelection()
     {
-      GUIWaitCursor.Show();
-      GUIListItem selectedItem = listControl.SelectedListItem;
-      if (selectedItem != null)
+      ShowWaitCursor();
+      try
       {
-        if (selectedItem.Label != "..")
+        GUIListItem selectedItem = listControl.SelectedListItem;
+        if (selectedItem != null)
         {
-          RadioTimeOutline radioItem = ((RadioTimeOutline)selectedItem.MusicTag);
-          switch (radioItem.Type)
+          if (selectedItem.Label != "..")
           {
-            case RadioTimeOutline.OutlineType.link:
-              if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
-              {
-                grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
-                                              grabber.Settings.GetParamString()), selectedItem.Label);
-              }
-              else if (!string.IsNullOrEmpty(radioItem.Url))
-              {
-                grabber.GetData(radioItem.Url, selectedItem.Label);                
-              }
-              UpdateList();
-              break;
-            case RadioTimeOutline.OutlineType.audio:
-              DoPlay(radioItem);
-              break;
-            default:
-              if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
-              {
-                grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
-                                              grabber.Settings.GetParamString()), selectedItem.Label);
+            RadioTimeOutline radioItem = ((RadioTimeOutline)selectedItem.MusicTag);
+            switch (radioItem.Type)
+            {
+              case RadioTimeOutline.OutlineType.link:
+                if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
+                {
+                  grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
+                                                grabber.Settings.GetParamString()), selectedItem.Label);
+                }
+                else if (!string.IsNullOrEmpty(radioItem.Url))
+                {
+                  grabber.GetData(radioItem.Url, selectedItem.Label);
+                }
                 UpdateList();
-              }
-              else if (!string.IsNullOrEmpty(radioItem.Url))
-              {
-                grabber.GetData(radioItem.Url, selectedItem.Label);
-                UpdateList();
-              }
-              break;
+                break;
+              case RadioTimeOutline.OutlineType.audio:
+                DoPlay(radioItem);
+                break;
+              default:
+                if (string.IsNullOrEmpty(radioItem.Url) && !string.IsNullOrEmpty(radioItem.GuidId))
+                {
+                  grabber.GetData(string.Format("http://opml.radiotime.com/Browse.ashx?id={0}&{1}", radioItem.GuidId,
+                                                grabber.Settings.GetParamString()), selectedItem.Label);
+                  UpdateList();
+                }
+                else if (!string.IsNullOrEmpty(radioItem.Url))
+                {
+                  grabber.GetData(radioItem.Url, selectedItem.Label);
+                  UpdateList();
+                }
+                break;
+            }
+          }
+          else
+          {
+            DoBack();
+            //grabber.Prev();
+            //UpdateList();
           }
         }
-        else
-        {
-          grabber.Prev();
-          UpdateList();
-        }
       }
-      GUIWaitCursor.Hide();
-      //throw new Exception("The method or operation is not implemented.");
+      finally
+      {
+        HideWaitCursor();
+      }
     }
 
 
@@ -674,8 +682,18 @@ namespace RadioTimePlugin
         item.MusicTag = null;
         listControl.Add(item);
       }
+      RadioTimeOutline selected = null;
       foreach (RadioTimeOutline body in grabber.Body)
       {
+        if (null != grabber.Selected && null != body && null != body.Url &&
+            (
+              body.Url.Equals((string)grabber.Selected, StringComparison.InvariantCultureIgnoreCase) ||
+              !string.IsNullOrEmpty(body.GuidId) && ((string)grabber.Selected).ToUpperInvariant().Contains(body.GuidId.ToUpperInvariant())
+            )
+           )
+        {
+          selected = body;
+        }
         GUIListItem item = new GUIListItem();
         // and add station name & bitrate
         item.Label = body.Text;
@@ -719,9 +737,21 @@ namespace RadioTimePlugin
             break;
         }
       }
+
       updateStationLogoTimer.Enabled = true;
       //if (curSorting != StationSort.SortMethod.none)
       listControl.Sort(new StationSort(curSorting, mapSettings.SortAscending));
+
+      int i = 0;
+      foreach (GUIListItem item in listControl.ListLayout.ListItems)
+      {
+        if (item.MusicTag == selected)
+        {
+          break;
+        }
+        i++;
+      } 
+      listControl.SelectedListItemIndex = i;
 
       GUIPropertyManager.SetProperty("#itemcount", grabber.Body.Count + " " + Translation.Objects);
       //GUIPropertyManager.SetProperty("#header.label", grabber.Head.Title);
@@ -737,7 +767,7 @@ namespace RadioTimePlugin
 
     void item_OnItemSelected(GUIListItem item, GUIControl parent)
     {
-      listControl.FilmstripView.InfoImageFileName = item.ThumbnailImage;
+      listControl.FilmstripLayout.InfoImageFileName = item.ThumbnailImage;
       UpdateGui();
     }
 
@@ -746,23 +776,23 @@ namespace RadioTimePlugin
       int itemIndex = listControl.SelectedListItemIndex;
       if (mapSettings.ViewAs == (int)View.BigIcons)
       {
-        listControl.View = GUIFacadeControl.ViewMode.LargeIcons;
+        listControl.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
       }
       else if (mapSettings.ViewAs == (int)View.Albums)
       {
-        listControl.View = GUIFacadeControl.ViewMode.AlbumView;
+        listControl.CurrentLayout = GUIFacadeControl.Layout.AlbumView;
       }
       else if (mapSettings.ViewAs == (int)View.Icons)
       {
-        listControl.View = GUIFacadeControl.ViewMode.SmallIcons;
+        listControl.CurrentLayout = GUIFacadeControl.Layout.SmallIcons;
       }
       else if (mapSettings.ViewAs == (int)View.List)
       {
-        listControl.View = GUIFacadeControl.ViewMode.List;
+        listControl.CurrentLayout = GUIFacadeControl.Layout.List;
       }
       else if (mapSettings.ViewAs == (int)View.Filmstrip)
       {
-        listControl.View = GUIFacadeControl.ViewMode.Filmstrip;
+        listControl.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
       }
       if (itemIndex > -1)
       {

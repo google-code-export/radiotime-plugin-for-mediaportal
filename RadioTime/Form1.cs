@@ -171,7 +171,7 @@ namespace Test
       if (listView1.SelectedItems.Count > 0)
       {
         TuneRequest req = new TuneRequest();
-        int i = 0;
+        //int i = 0;
         req.StationId = ((RadioTimeOutline)listView1.SelectedItems[0].Tag).StationIdAsInt;
         req.Identification = new Identification();
         req.Identification.UserName = textBoxUser.Text;

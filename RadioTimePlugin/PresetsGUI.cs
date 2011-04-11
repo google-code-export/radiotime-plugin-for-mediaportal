@@ -6,6 +6,8 @@ using System.IO;
 using MediaPortal.GUI.Library;
 using RadioTimeOpmlApi;
 
+using Action = MediaPortal.GUI.Library.Action;
+
 namespace RadioTimePlugin
 {
   public class PresetsGUI : BaseGui
