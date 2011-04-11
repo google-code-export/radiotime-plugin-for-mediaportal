@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Xml;
-using MediaPortal.GUI.Library;
-
 
 namespace RadioTimeOpmlApi
 {
@@ -128,7 +126,7 @@ namespace RadioTimeOpmlApi
             i++;
           }
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
         Slogan = string.IsNullOrEmpty(Slogan) ? " " : Slogan;
@@ -157,7 +155,7 @@ namespace RadioTimeOpmlApi
           return response.GetResponseStream();
 
       }
-      catch (Exception e)
+      catch (Exception)
       {
         // can't connect, timeout, etc
       }

@@ -4,7 +4,6 @@ using System.Net;
 using System.Collections.Generic;
 using System.Xml;
 using System.Text;
-using MediaPortal.GUI.Library;
 
 namespace RadioTimeOpmlApi
 {
@@ -105,6 +104,8 @@ namespace RadioTimeOpmlApi
         set { _navigationTitle = value; }
     }
 
+    public object Selected { get; set; }
+
     /// <summary>
     /// Adds the preset.
     /// </summary>
@@ -144,6 +145,7 @@ namespace RadioTimeOpmlApi
       Cache = new Dictionary<string, RadioTime>();
       Parent = null;
       NavigationTitle = "";
+      Selected = null;
     }
     
     public RadioTime(RadioTime parent)
@@ -165,6 +167,7 @@ namespace RadioTimeOpmlApi
     {
       if (Parent != null)
       {
+        this.Selected = CurentUrl;
         this.Head = Parent.Head;
         this.Body = Parent.Body;
         this.Settings = Parent.Settings;
@@ -426,7 +429,7 @@ namespace RadioTimeOpmlApi
           return response.GetResponseStream();
 
       }
-      catch (Exception e)
+      catch (Exception)
       {
         // can't connect, timeout, etc
       }

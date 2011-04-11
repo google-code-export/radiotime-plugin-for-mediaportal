@@ -40,7 +40,7 @@ namespace RadioTimePlugin
       : base()
     {
       FormatPlayer = new Dictionary<string, PlayerType>();
-      FormatPlayer.Add("wma", PlayerType.Video);
+      FormatPlayer.Add("wma", PlayerType.Audio);
       FormatPlayer.Add("mp3", PlayerType.Audio);
       FormatPlayer.Add("aac", PlayerType.Audio);
       FormatPlayer.Add("real", PlayerType.Video);

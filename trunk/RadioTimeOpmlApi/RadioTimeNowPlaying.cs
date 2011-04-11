@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Xml;
-using MediaPortal.GUI.Library;
 
 namespace RadioTimeOpmlApi
 {
@@ -132,7 +131,7 @@ namespace RadioTimeOpmlApi
           return response.GetResponseStream();
 
       }
-      catch (Exception e)
+      catch (Exception)
       {
         // can't connect, timeout, etc
       }

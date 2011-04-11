@@ -118,10 +118,6 @@ namespace RadioTimeOpmlApi
     public string GetParamString()
     {
       string s = "";
-      if (!string.IsNullOrEmpty(User.Trim()))
-      {
-        s += "username=" + User;
-      }
       string ext = string.Empty;
       if (Mp3)
         ext += "mp3,";
@@ -129,7 +125,11 @@ namespace RadioTimeOpmlApi
         ext += "wma,";
       if (Real)
         ext += "real";
-      s += "&formats=wma,mp3,aac,real,flash,wmpro,wmvoice,wmvideo,ogg,qt";
+      s += "formats=wma,mp3,aac,real,flash,wmpro,wmvoice,wmvideo,ogg,qt";
+      if (!string.IsNullOrEmpty(User.Trim()))
+      {
+        s += "&username=" + User;
+      }
       if (!string.IsNullOrEmpty(PartnerId))
       {
         s += "&partnerID=" + PartnerId;
