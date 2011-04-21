@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\mp\mediaportal\xbmc\bin\Debug\plugins\Windows\</OutputPath>
+    <OutputPath>..\..\mp\mediaportal\MediaPortal.Application\bin\Debug\plugins\Windows\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,14 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Utils">
-      <HintPath>C:\HTPC\MediaPortal\Common.Utils.dll</HintPath>
+    <Reference Include="Common.Utils, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\mp\mediaportal\MediaPortal.Application\bin\Debug\Common.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Core">
-      <HintPath>D:\HTPC\MediaPortal\Core.dll</HintPath>
+    <Reference Include="Core, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\mp\mediaportal\MediaPortal.Application\bin\Debug\Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Dialogs">
-      <HintPath>D:\HTPC\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
+    <Reference Include="Dialogs, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\mp\mediaportal\MediaPortal.Application\bin\Debug\plugins\Windows\Dialogs.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -52,8 +58,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils">
-      <HintPath>D:\HTPC\MediaPortal\Utils.dll</HintPath>
+    <Reference Include="Utils, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\mp\mediaportal\MediaPortal.Application\bin\Debug\Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

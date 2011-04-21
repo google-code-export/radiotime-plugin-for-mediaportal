@@ -32,10 +32,10 @@ using MediaPortal.Common.Utils;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.6.5.0")]
-[assembly: AssemblyFileVersion("0.6.5.0")]
+[assembly: AssemblyVersion("0.6.5.*")]
+[assembly: AssemblyFileVersion("0.6.5.*")]
 
-[assembly: CompatibleVersion("1.1.6.27644")]
+[assembly: CompatibleVersion("1.1.7.0")]
 [assembly: UsesSubsystem("MP.SkinEngine")]
 [assembly: UsesSubsystem("MP.Players.Video")]
 [assembly: UsesSubsystem("MP.Players.Music")]
