@@ -94,7 +94,9 @@ namespace RadioTimePlugin
       
       if (control.GetType() == typeof(GUIButtonControl))
       {
-        if (controlId > 100 && controlId <= Settings.LOCAL_PRESETS_NUMBER + 100)
+        if (controlId > 100 && controlId <= Settings.LOCAL_PRESETS_NUMBER + 100 &&
+            _setting.PresetStations[controlId - 100 - 1] != null &&
+            _setting.PresetStations[controlId - 100 - 1].GuidId != null)
         {
           DoPlay(_setting.PresetStations[controlId - 100 - 1]);
           if (_setting.JumpNowPlaying)

@@ -49,9 +49,10 @@ namespace RadioTimeOpmlApi
       string sUrl = string.Format("http://opml.radiotime.com/Describe.ashx?id={0}&detail=genre,recommendation&{1}", GuideId, Grabber.Settings.GetParamString());
       
       //Log.Debug("Get Station " + sUrl);
-      IsAvailable = true;
+      IsAvailable = false;
       if(string.IsNullOrEmpty(GuideId))
         return;
+      IsAvailable = true;
       Stream response = RetrieveData(sUrl);
       if (response != null)
       {
