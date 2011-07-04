@@ -46,6 +46,7 @@ namespace RadioTimePlugin
       StreamReader file = new StreamReader(stream, fileEncoding, true);
       if (file == null)
       {
+        stream.Close();
         return false;
       }
 
@@ -53,6 +54,7 @@ namespace RadioTimePlugin
       line = file.ReadLine();
       if (line == null)
       {
+        stream.Close();
         file.Close();
         return false;
       }
@@ -68,10 +70,13 @@ namespace RadioTimePlugin
           PlayListItem newItem = new PlayListItem(strLine, strLine, 0);
           newItem.Type = PlayListItem.PlayListItemType.AudioStream;
           playlist.Add(newItem);
+          stream.Close();
           file.Close();
           return true;
         }
         fileEncoding = Encoding.Default;
+        stream.Close();
+        file.Close();
         stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
         file = new StreamReader(stream, fileEncoding, true);
 
@@ -169,6 +174,7 @@ namespace RadioTimePlugin
         }
         line = file.ReadLine();
       }
+      stream.Close();
       file.Close();
 
       if (fileName.Length > 0)

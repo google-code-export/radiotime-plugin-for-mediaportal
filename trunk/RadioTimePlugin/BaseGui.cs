@@ -232,25 +232,30 @@ namespace RadioTimePlugin
             {
               string TargetFile = Path.GetTempFileName();
               WebClient client = new WebClient();
-              if (item.Url.ToLower().Contains(".pls"))
+              try
               {
-                client.DownloadFile(item.Url, TargetFile);
-                IPlayListIO loader = new PlayListPLSEIO();
-                loader.Load(playList, TargetFile);
-                File.Delete(TargetFile);
+                if (item.Url.ToLower().Contains(".pls"))
+                {
+                  client.DownloadFile(item.Url, TargetFile);
+                  IPlayListIO loader = new PlayListPLSEIO();
+                  loader.Load(playList, TargetFile);
+                }
+                else if (item.Url.ToLower().Contains(".asx"))
+                {
+                  client.DownloadFile(item.Url, TargetFile);
+                  IPlayListIO loader = new PlayListASXIO();
+                  loader.Load(playList, TargetFile);
+                }
+                else
+                {
+                  client.DownloadFile(item.Url, TargetFile);
+                  IPlayListIO loader = new PlayListM3uIO();
+                  loader.Load(playList, TargetFile);
+                }
               }
-              else if (item.Url.ToLower().Contains(".asx"))
+              finally 
               {
-                client.DownloadFile(item.Url, TargetFile);
-                IPlayListIO loader = new PlayListASXIO();
-                loader.Load(playList, TargetFile);
-                File.Delete(TargetFile);
-              }
-              else
-              {
-                client.DownloadFile(item.Url, TargetFile);
-                IPlayListIO loader = new PlayListM3uIO();
-                loader.Load(playList, TargetFile);
+                client.Dispose();
                 File.Delete(TargetFile);
               }
 
@@ -262,33 +267,39 @@ namespace RadioTimePlugin
               //  File.Delete(TargetFile);
               //}
 
-              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".pls"))
+              TargetFile = Path.GetTempFileName();
+              client = new WebClient();
+              try
               {
-                client.DownloadFile(playList[0].FileName, TargetFile);
-                IPlayListIO loader1 = new PlayListPLSEIO();
-                //loader1.Load(playList, playList[0].FileName);
-                loader1.Load(playList, TargetFile);
-                File.Delete(TargetFile);
-              }
-
-              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".asx"))
-              {
-                client.DownloadFile(playList[0].FileName, TargetFile);
-                IPlayListIO loader1 = new PlayListASXIO();
-                loader1.Load(playList, TargetFile);
-                File.Delete(TargetFile);
-              }
-
-              if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".m3u"))
-              {
-                client.DownloadFile(playList[0].FileName, TargetFile);
-                IPlayListIO loader1 = new PlayListM3uIO();
-                loader1.Load(playList, TargetFile);
-                if (playList.Count == 0)
+                if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".pls"))
                 {
-                  IPlayListIO loader2 = new PlayListPLSEIO();
-                  loader2.Load(playList, TargetFile);
+                  client.DownloadFile(playList[0].FileName, TargetFile);
+                  IPlayListIO loader1 = new PlayListPLSEIO();
+                  loader1.Load(playList, TargetFile);
                 }
+
+                if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".asx"))
+                {
+                  client.DownloadFile(playList[0].FileName, TargetFile);
+                  IPlayListIO loader1 = new PlayListASXIO();
+                  loader1.Load(playList, TargetFile);
+                }
+
+                if (playList.Count > 0 && playList[0].FileName.ToLower().Contains(".m3u"))
+                {
+                  client.DownloadFile(playList[0].FileName, TargetFile);
+                  IPlayListIO loader1 = new PlayListM3uIO();
+                  loader1.Load(playList, TargetFile);
+                  if (playList.Count == 0)
+                  {
+                    IPlayListIO loader2 = new PlayListPLSEIO();
+                    loader2.Load(playList, TargetFile);
+                  }
+                }
+              }
+              finally
+              {
+                client.Dispose();
                 File.Delete(TargetFile);
               }
             }
