@@ -685,10 +685,10 @@ namespace RadioTimePlugin
       RadioTimeOutline selected = null;
       foreach (RadioTimeOutline body in grabber.Body)
       {
-        if (null != grabber.Selected && null != body && null != body.Url &&
+        if (null != grabber.Selected && null != body && null == selected && 
             (
-              body.Url.Equals((string)grabber.Selected, StringComparison.InvariantCultureIgnoreCase) ||
-              !string.IsNullOrEmpty(body.GuidId) && ((string)grabber.Selected).ToUpperInvariant().Contains(body.GuidId.ToUpperInvariant())
+              (null != body.Url && body.Url.Equals((string)grabber.Selected, StringComparison.InvariantCultureIgnoreCase)) ||
+              (!string.IsNullOrEmpty(body.GuidId) && ((string)grabber.Selected).ToUpperInvariant().Contains(body.GuidId.ToUpperInvariant()))
             )
            )
         {
