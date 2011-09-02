@@ -214,7 +214,7 @@ namespace RadioTimePlugin
         _station.Grabber = grabber;
         _station.Get(item.GuidId);
 
-        if (_station.IsAvailable)
+        if (string.IsNullOrEmpty(item.GuidId) || _station.IsAvailable)
         {
           //var nowPlaying = Settings.NowPlaying;
           _nowPlaying = new RadioTimeNowPlaying();
