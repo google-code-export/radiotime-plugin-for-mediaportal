@@ -45,6 +45,9 @@ namespace RadioTimeOpmlApi
 
     public void Get(string guideid)
     {
+      if (string.IsNullOrEmpty(guideid))
+        return;
+
       GuideId = guideid;
       string sUrl = string.Format("http://opml.radiotime.com/Describe.ashx?id={0}&detail=genre,recommendation&{1}", GuideId, Grabber.Settings.GetParamString());
       
