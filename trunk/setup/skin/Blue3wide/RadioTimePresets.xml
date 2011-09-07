@@ -2,10 +2,29 @@
 <window>
     <id>25653</id>
     <defaultcontrol>101</defaultcontrol>
-    <allowoverlay>yes</allowoverlay>
-    <define>#header.image:radiotime_logo.png</define>
+    <allowoverlay>yes</allowoverlay>    
     <controls>
+    <control>
+      <type>image</type>
+      <description>BG</description>
+      <id>1</id>
+      <texture>Background.png</texture>
+      <width>1280</width>
+      <height>720</height>
+    </control>
         <import>common.window.xml</import>
+        <import>common.time.xml</import>
+        <control>
+            <type>label</type>
+            <description>Header Label</description>
+            <id>1</id>
+            <posX>60</posX>
+            <posY>27</posY>
+            <label>Radio Time</label>
+            <font>font16</font>
+            <align>left</align>
+            <textcolor>White</textcolor>
+        </control>	
         <control>
             <id>101</id>
             <type>button</type>
