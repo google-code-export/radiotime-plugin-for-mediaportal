@@ -6,11 +6,11 @@
   <controls>
     <control>
       <type>image</type>
-      <id>0</id>
+      <description>BG</description>
+      <id>1</id>
+      <texture>Background.png</texture>
       <width>1280</width>
       <height>720</height>
-      <texture>black.png</texture>
-      <colordiffuse>60ffffff</colordiffuse>
     </control>
     <control>
       <description>background image</description>
