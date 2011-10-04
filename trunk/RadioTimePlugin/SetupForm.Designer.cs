@@ -85,6 +85,7 @@ namespace RadioTimePlugin
       // 
       this.textBox_passwd.Location = new System.Drawing.Point(6, 71);
       this.textBox_passwd.Name = "textBox_passwd";
+      this.textBox_passwd.PasswordChar = '*';
       this.textBox_passwd.Size = new System.Drawing.Size(171, 20);
       this.textBox_passwd.TabIndex = 3;
       // 
