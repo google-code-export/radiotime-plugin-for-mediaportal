@@ -365,17 +365,17 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl>http://radiotime-plugin-for-mediaportal.googlecode.com/svn/trunk/setup/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
-      <Minor>6</Minor>
-      <Build>7</Build>
+      <Minor>7</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Plugin for browse and play more that 100.000 online radio stations from tunein.com</ExtensionDescription>
-    <VersionDescription>Compatibility for RC 
+    <VersionDescription>Stable release
 
 </VersionDescription>
-    <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.6.7.0.mpe1</OnlineLocation>
-    <ReleaseDate>2011-09-02T22:38:05</ReleaseDate>
+    <DevelopmentStatus>Stable</DevelopmentStatus>
+    <OnlineLocation>http://radiotime-plugin-for-mediaportal.googlecode.com/files/RadioTime.0.7.0.0.mpe1</OnlineLocation>
+    <ReleaseDate>2011-10-04T22:38:05</ReleaseDate>
     <Tags>radio, online</Tags>
     <Location>d:\devel\vs2005\RadioTimePlugin\setup\RadioTime.[Version].mpe1</Location>
     <Params>
@@ -535,7 +535,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>radiotime_playlogo_100.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{50d44ab1-140a-42b9-8b34-d50cfebd6f0e}-radiotime_playlogo_100.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{8dee198f-9584-4ab8-97c1-b8a569ed759c}-radiotime_playlogo_100.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
